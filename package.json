@@ -1,0 +1,42 @@
+{
+  "name": "techpioneers-web",
+  "version": "1.0.0",
+  "description": "A portfolio project showcasing key figures in tech industry - built with vanilla JavaScript, HTML5, and CSS3",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write \"src/**/*.{js,css,html}\"",
+    "format:check": "prettier --check \"src/**/*.{js,css,html}\"",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauricio/techpioneers_web.git"
+  },
+  "keywords": [
+    "portfolio",
+    "vanilla-javascript",
+    "vite",
+    "responsive-design",
+    "accessibility",
+    "docker",
+    "cicd"
+  ],
+  "author": "Mauricio Oliveda",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mauricio/techpioneers_web/issues"
+  },
+  "homepage": "https://github.com/mauricio/techpioneers_web#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "eslint": "^9.39.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.2",
+    "vite": "^7.1.12"
+  }
+}
