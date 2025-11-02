@@ -78,7 +78,6 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
    ```
 
 4. **Run the development server**
-
    - **Option A: Without Docker (Quick Start)**
 
    ```bash
@@ -86,7 +85,6 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
    ```
 
    Open [http://localhost:5173](http://localhost:5173) in your browser.
-
    - **Option B: With Docker (Recommended)**
 
    ```bash
@@ -101,39 +99,39 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build production-ready bundle |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint to check code quality |
-| `npm run lint:fix` | Fix auto-fixable ESLint errors |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting without changes |
+| Command                | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Start development server with hot reload |
+| `npm run build`        | Build production-ready bundle            |
+| `npm run preview`      | Preview production build locally         |
+| `npm run lint`         | Run ESLint to check code quality         |
+| `npm run lint:fix`     | Fix auto-fixable ESLint errors           |
+| `npm run format`       | Format code with Prettier                |
+| `npm run format:check` | Check code formatting without changes    |
 
 ### Docker Commands
 
 #### Local Development (Auto-loaded override)
 
-| Command | Description |
-|---------|-------------|
-| `docker compose up --build` | Start development environment (foreground) |
-| `docker compose up -d` | Start development environment (detached) |
-| `docker compose logs -f` | View live logs |
-| `docker compose down` | Stop and remove containers |
-| `docker compose restart web` | Restart a specific service |
-| `docker compose exec web bash` | Open shell inside container |
+| Command                        | Description                                |
+| ------------------------------ | ------------------------------------------ |
+| `docker compose up --build`    | Start development environment (foreground) |
+| `docker compose up -d`         | Start development environment (detached)   |
+| `docker compose logs -f`       | View live logs                             |
+| `docker compose down`          | Stop and remove containers                 |
+| `docker compose restart web`   | Restart a specific service                 |
+| `docker compose exec web bash` | Open shell inside container                |
 
 #### Staging Environment
 
-| Command | Description |
-|---------|-------------|
+| Command                                                                            | Description                       |
+| ---------------------------------------------------------------------------------- | --------------------------------- |
 | `docker compose -f docker-compose.yml -f docker-compose.staging.yml up --build -d` | Build and run staging environment |
 
 #### Production Environment
 
-| Command | Description |
-|---------|-------------|
+| Command                                                                         | Description                          |
+| ------------------------------------------------------------------------------- | ------------------------------------ |
 | `docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d` | Build and run production environment |
 
 ### Project Structure
@@ -192,7 +190,7 @@ techpioneers/
 │   └── index.html                   # Main HTML file
 ├── .dockerignore                    # Docker ignore patterns
 ├── .env.example                     # Environment variables template
-├── .eslintrc.js                     # ESLint configuration
+├── eslint.config.js                 # ESLint configuration
 ├── .gitignore                       # Git ignore patterns
 ├── .prettierrc.json                 # Prettier configuration
 ├── AGENTS.md                        # AI agent development guide
@@ -229,15 +227,20 @@ All styles follow the **Block Element Modifier (BEM)** naming convention:
 
 ```css
 /* Block */
-.pioneer-card { }
+.pioneer-card {
+}
 
 /* Element */
-.pioneer-card__image { }
-.pioneer-card__title { }
+.pioneer-card__image {
+}
+.pioneer-card__title {
+}
 
 /* Modifier */
-.pioneer-card--featured { }
-.pioneer-card--clickable { }
+.pioneer-card--featured {
+}
+.pioneer-card--clickable {
+}
 ```
 
 ---
@@ -264,35 +267,35 @@ We use [Gitmoji](https://gitmoji.dev/) for commit messages with the following st
 
 **Gitmoji Reference:**
 
-| Emoji | Code | Description | Use Case |
-|-------|------|-------------|----------|
-| 🎉 | `:tada:` | Initial commit | First commit of the project |
-| ✨ | `:sparkles:` | New feature | Introducing new features |
-| 🐛 | `:bug:` | Bug fix | Fixing a bug |
-| 📝 | `:memo:` | Documentation | Add or update documentation |
-| 🎨 | `:art:` | Code structure/format | Improve structure/format of code |
-| ⚡️ | `:zap:` | Performance | Improve performance |
-| 🔥 | `:fire:` | Remove code/files | Remove code or files |
-| 🚀 | `:rocket:` | Deploy | Deploy stuff |
-| 💄 | `:lipstick:` | UI/style | Add or update UI and style files |
-| ✅ | `:white_check_mark:` | Tests | Add, update, or pass tests |
-| 🔒️ | `:lock:` | Security | Fix security issues |
-| 🔧 | `:wrench:` | Configuration | Add or update configuration files |
-| 🚨 | `:rotating_light:` | Linter | Fix compiler/linter warnings |
-| 🚧 | `:construction:` | Work in progress | Work in progress |
-| ♻️ | `:recycle:` | Refactor | Refactor code |
-| ⬆️ | `:arrow_up:` | Dependencies | Upgrade dependencies |
-| ⬇️ | `:arrow_down:` | Dependencies | Downgrade dependencies |
-| 🔀 | `:twisted_rightwards_arrows:` | Merge | Merge branches |
-| ➕ | `:heavy_plus_sign:` | Dependency | Add a dependency |
-| ➖ | `:heavy_minus_sign:` | Dependency | Remove a dependency |
-| 🌐 | `:globe_with_meridians:` | Internationalization | Internationalization and localization |
-| 💚 | `:green_heart:` | CI | Fix CI Build |
-| 📱 | `:iphone:` | Responsive | Work on responsive design |
-| 🍱 | `:bento:` | Assets | Add or update assets |
-| ♿️ | `:wheelchair:` | Accessibility | Improve accessibility |
-| 🏗️ | `:building_construction:` | Architecture | Make architectural changes |
-| 📦️ | `:package:` | Build | Add or update compiled files or packages |
+| Emoji | Code                          | Description           | Use Case                                 |
+| ----- | ----------------------------- | --------------------- | ---------------------------------------- |
+| 🎉    | `:tada:`                      | Initial commit        | First commit of the project              |
+| ✨    | `:sparkles:`                  | New feature           | Introducing new features                 |
+| 🐛    | `:bug:`                       | Bug fix               | Fixing a bug                             |
+| 📝    | `:memo:`                      | Documentation         | Add or update documentation              |
+| 🎨    | `:art:`                       | Code structure/format | Improve structure/format of code         |
+| ⚡️   | `:zap:`                       | Performance           | Improve performance                      |
+| 🔥    | `:fire:`                      | Remove code/files     | Remove code or files                     |
+| 🚀    | `:rocket:`                    | Deploy                | Deploy stuff                             |
+| 💄    | `:lipstick:`                  | UI/style              | Add or update UI and style files         |
+| ✅    | `:white_check_mark:`          | Tests                 | Add, update, or pass tests               |
+| 🔒️   | `:lock:`                      | Security              | Fix security issues                      |
+| 🔧    | `:wrench:`                    | Configuration         | Add or update configuration files        |
+| 🚨    | `:rotating_light:`            | Linter                | Fix compiler/linter warnings             |
+| 🚧    | `:construction:`              | Work in progress      | Work in progress                         |
+| ♻️    | `:recycle:`                   | Refactor              | Refactor code                            |
+| ⬆️    | `:arrow_up:`                  | Dependencies          | Upgrade dependencies                     |
+| ⬇️    | `:arrow_down:`                | Dependencies          | Downgrade dependencies                   |
+| 🔀    | `:twisted_rightwards_arrows:` | Merge                 | Merge branches                           |
+| ➕    | `:heavy_plus_sign:`           | Dependency            | Add a dependency                         |
+| ➖    | `:heavy_minus_sign:`          | Dependency            | Remove a dependency                      |
+| 🌐    | `:globe_with_meridians:`      | Internationalization  | Internationalization and localization    |
+| 💚    | `:green_heart:`               | CI                    | Fix CI Build                             |
+| 📱    | `:iphone:`                    | Responsive            | Work on responsive design                |
+| 🍱    | `:bento:`                     | Assets                | Add or update assets                     |
+| ♿️    | `:wheelchair:`                | Accessibility         | Improve accessibility                    |
+| 🏗️    | `:building_construction:`     | Architecture          | Make architectural changes               |
+| 📦️   | `:package:`                   | Build                 | Add or update compiled files or packages |
 
 **Examples:**
 
@@ -325,11 +328,11 @@ Husky automatically runs the following checks before each commit:
 
 ### Environments
 
-| Environment | Branch | Service Name | URL | Auto-Deploy |
-|-------------|--------|--------------|-----|-------------|
-| Development | local | N/A | localhost:5173 | N/A |
-| Staging | `develop` | techpioneers-staging | techpioneers-staging-[id].run.app | ✅ Yes |
-| Production | `main` | techpioneers-prod | techpioneers-prod-[id].run.app | ✅ Yes |
+| Environment | Branch    | Service Name         | URL                               | Auto-Deploy |
+| ----------- | --------- | -------------------- | --------------------------------- | ----------- |
+| Development | local     | N/A                  | localhost:5173                    | N/A         |
+| Staging     | `develop` | techpioneers-staging | techpioneers-staging-[id].run.app | ✅ Yes      |
+| Production  | `main`    | techpioneers-prod    | techpioneers-prod-[id].run.app    | ✅ Yes      |
 
 ### CI/CD Pipelines
 
@@ -341,11 +344,11 @@ Three GitHub Actions workflows automate testing and deployment:
 
 ### Docker Image Tagging Strategy
 
-| Branch | Docker Tags | Cloud Run Service | Description |
-|--------|-------------|-------------------|-------------|
-| `develop` | `latest`, `{git-sha}` | techpioneers-staging | Auto-deploy on every push |
-| `main` | `{version}`, `stable` | techpioneers-prod | Stable releases with SemVer |
-| Feature branches | N/A | N/A | Local development only |
+| Branch           | Docker Tags           | Cloud Run Service    | Description                 |
+| ---------------- | --------------------- | -------------------- | --------------------------- |
+| `develop`        | `latest`, `{git-sha}` | techpioneers-staging | Auto-deploy on every push   |
+| `main`           | `{version}`, `stable` | techpioneers-prod    | Stable releases with SemVer |
+| Feature branches | N/A                   | N/A                  | Local development only      |
 
 **Version Format:**
 
@@ -430,16 +433,16 @@ This project is committed to web accessibility and follows **WCAG 2.1 Level AA**
 
 Target metrics based on Lighthouse audits:
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| Performance | 90+ | ✅ |
-| Accessibility | 90+ | ✅ |
-| Best Practices | 90+ | ✅ |
-| SEO | 90+ | ✅ |
-| First Contentful Paint | < 1.5s | ✅ |
-| Largest Contentful Paint | < 2.5s | ✅ |
-| Cumulative Layout Shift | < 0.1 | ✅ |
-| Time to Interactive | < 3.5s | ✅ |
+| Metric                   | Target | Status |
+| ------------------------ | ------ | ------ |
+| Performance              | 90+    | ✅     |
+| Accessibility            | 90+    | ✅     |
+| Best Practices           | 90+    | ✅     |
+| SEO                      | 90+    | ✅     |
+| First Contentful Paint   | < 1.5s | ✅     |
+| Largest Contentful Paint | < 2.5s | ✅     |
+| Cumulative Layout Shift  | < 0.1  | ✅     |
+| Time to Interactive      | < 3.5s | ✅     |
 
 ## 📝 Environment Variables
 
