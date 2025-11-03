@@ -1,0 +1,353 @@
+/**
+ * Typography System
+ * Based on Figma Design Tokens
+ * 
+ * This file defines typography styles using CSS custom properties
+ * from variables.css. Includes responsive typography that adapts
+ * from mobile to desktop.
+ */
+
+/* ============================================
+   FONT FACE DECLARATIONS
+   ============================================ */
+
+/* Figtree Variable Font (Headings) */
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/figtree-variable.ttf") format("truetype-variations");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Roboto Variable Font (Body Text) */
+@font-face {
+  font-family: "Roboto";
+  src: url("/assets/fonts/roboto-variable.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================
+   BASE TYPOGRAPHY
+   ============================================ */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-body);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   HEADINGS
+   ============================================ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Heading 1 */
+h1,
+.heading-1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-h1);
+}
+
+/* Heading 2 */
+h2,
+.heading-2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
+}
+
+/* Heading 3 */
+h3,
+.heading-3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
+}
+
+/* Heading 4 (using h3 styles as base, slightly smaller) */
+h4,
+.heading-4 {
+  font-size: calc(var(--font-size-h3) * 0.9);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
+}
+
+/* Heading 5 & 6 (using body styles) */
+h5,
+h6,
+.heading-5,
+.heading-6 {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-body);
+}
+
+/* ============================================
+   BODY TEXT
+   ============================================ */
+
+p,
+.body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-body);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Body Small */
+.body-small {
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-body-small);
+}
+
+/* Body Secondary (muted text) */
+.body-secondary,
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   CAPTION & SMALL TEXT
+   ============================================ */
+
+.caption,
+small {
+  font-family: var(--font-body);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-caption);
+  letter-spacing: var(--letter-spacing-caption);
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a,
+.link {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-body);
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover,
+.link:hover {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+a:focus,
+.link:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+a:active,
+.link:active {
+  color: var(--color-primary);
+}
+
+/* ============================================
+   BUTTONS & LABELS
+   ============================================ */
+
+.button-label,
+button,
+.btn {
+  font-family: var(--font-button);
+  font-size: var(--font-size-button);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-button);
+  letter-spacing: var(--letter-spacing-button);
+  text-transform: none;
+}
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+
+/* Font Weights */
+.font-regular {
+  font-weight: var(--font-weight-regular);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Text Alignment */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+/* Text Transform */
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+/* Text Decoration */
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-no-underline {
+  text-decoration: none;
+}
+
+/* ============================================
+   LIST STYLES
+   ============================================ */
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+.list-none {
+  list-style: none;
+}
+
+/* ============================================
+   BLOCKQUOTE
+   ============================================ */
+
+blockquote {
+  margin: 0;
+  padding-left: var(--spacing-md);
+  border-left: 4px solid var(--color-primary);
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   CODE & PREFORMATTED TEXT
+   ============================================ */
+
+code,
+kbd,
+samp {
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New",
+    monospace;
+  font-size: 0.875em;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+}
+
+pre {
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New",
+    monospace;
+  font-size: var(--font-size-body-small);
+  line-height: 1.6;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  overflow-x: auto;
+}
+
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+
+::selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
