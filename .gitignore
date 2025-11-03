@@ -110,6 +110,8 @@ key.json
 # Google Cloud credentials
 gcloud-service-key.json
 service-account.json
+gcp-key-*.json
+key.json
 
 # Docker
 .dockerignore.backup
