@@ -595,12 +595,11 @@ docker-compose*.yml
 #### `docker-compose.yml` (Base Configuration)
 
 ```yaml
-version: "3.8"
-
 services:
   web:
     build:
       context: .
+    container_name: web
     networks:
       - app-network
     restart: unless-stopped
@@ -613,12 +612,13 @@ networks:
 #### `docker-compose.override.yml` (Local Development - Auto-loaded)
 
 ```yaml
-version: "3.8"
-
+name: techpioneers-local
 services:
   web:
     build:
       dockerfile: Dockerfile.dev
+    env_file:
+      - .env
     ports:
       - "5173:5173"
     volumes:
@@ -631,27 +631,31 @@ services:
 #### `docker-compose.staging.yml` (Staging Override)
 
 ```yaml
-version: "3.8"
-
+name: techpioneers-staging
 services:
   web:
     build:
       dockerfile: Dockerfile.prod
+    container_name: web
+    env_file:
+      - .env.staging
     ports:
-      - "8080:80"
+      - "8081:80"
     environment:
-      - NODE_ENV=staging
+      - NODE_ENV=production
 ```
 
 #### `docker-compose.prod.yml` (Production Override)
 
 ```yaml
-version: "3.8"
-
+name: techpioneers-prod
 services:
   web:
     build:
       dockerfile: Dockerfile.prod
+    container_name: web
+    env_file:
+      - .env.production
     ports:
       - "80:80"
     environment:
@@ -1521,10 +1525,10 @@ If you need even more cost savings, consider these alternatives:
 - [x] Initialize Git repository with GitFlow
 - [x] Set up Vite project structure
 - [x] Configure ESLint, Prettier, Husky
-- [ ] Create Docker configurations
+- [x] Create Docker configurations
 - [ ] Set up GitHub Actions workflows
-- [ ] Write README.md and AGENTS.md
-- [ ] Initial commit to `main` branch
+- [x] Write README.md and AGENTS.md
+- [x] Initial commit to `main` branch
 
 ### Phase 2: Design System Implementation (Week 1-2)
 
