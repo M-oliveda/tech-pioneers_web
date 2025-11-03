@@ -1,0 +1,12 @@
+name: techpioneers-staging
+services:
+  web:
+    build:
+      dockerfile: Dockerfile.prod
+    container_name: web
+    env_file:
+      - .env.staging
+    ports:
+      - "8081:80"
+    environment:
+      - NODE_ENV=production
