@@ -1,31 +1,122 @@
-/* TechPioneers - Main Stylesheet */
+/**
+ * TechPioneers - Main Stylesheet
+ * 
+ * This is the main entry point for all CSS.
+ * Imports are organized in the following order:
+ * 1. Base styles (reset, variables, typography)
+ * 2. Layout styles
+ * 3. Component styles
+ * 4. Utility styles
+ */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+/* CSS Reset - Must be first */
+@import "./base/reset.css";
+
+/* Design Tokens - Variables and theme definitions */
+@import "./base/variables.css";
+
+/* Typography System */
+@import "./base/typography.css";
+
+/* ============================================
+   LAYOUT STYLES
+   ============================================ */
+
+/* Grid System */
+/* @import "./layout/grid.css"; */
+
+/* Container Utilities */
+/* @import "./layout/container.css"; */
+
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
+
+/* Header */
+/* @import "./components/header.css"; */
+
+/* Hero Section */
+/* @import "./components/hero.css"; */
+
+/* Pioneer Card */
+/* @import "./components/pioneer-card.css"; */
+
+/* Carousel */
+/* @import "./components/carousel.css"; */
+
+/* Modal */
+/* @import "./components/modal.css"; */
+
+/* Timeline */
+/* @import "./components/timeline.css"; */
+
+/* Resources Section */
+/* @import "./components/resources.css"; */
+
+/* Footer */
+/* @import "./components/footer.css"; */
+
+/* Theme Switcher */
+/* @import "./components/theme-switcher.css"; */
+
+/* ============================================
+   UTILITY STYLES
+   ============================================ */
+
+/* Animations */
+/* @import "./utilities/animations.css"; */
+
+/* Responsive Utilities */
+/* @import "./utilities/responsive.css"; */
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+/* 
+ * Apply background and transition to entire document
+ * for smooth theme switching
+ */
+html {
+  background-color: var(--color-background);
+  transition: background-color var(--transition-base);
 }
 
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
 }
 
-h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
+/* ============================================
+   TEMPORARY DEVELOPMENT STYLES
+   (Remove in production)
+   ============================================ */
 
-p {
-  font-size: 1.5rem;
-  opacity: 0.9;
+/* Uncomment below for development/testing purposes */
+
+/*
+.dev-grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 0, 0, 0.1) 0px,
+      rgba(255, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 8px
+    );
 }
+*/
