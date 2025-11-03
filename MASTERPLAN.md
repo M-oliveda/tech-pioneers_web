@@ -735,6 +735,8 @@ jobs:
 
 **Purpose:** Deploy latest changes to staging environment
 
+**Note:** Uses Docker Hub (free tier) instead of Artifact Registry to minimize costs.
+
 ```yaml
 name: Deploy to Staging
 
@@ -746,15 +748,35 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GCP_REGION }}
   SERVICE_NAME: techpioneers-staging
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_NAME: techpioneers
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -f Dockerfile.prod \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -764,26 +786,10 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
-
-      - name: Build Docker image
-        run: |
-          docker build -f Dockerfile.prod \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:latest \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            .
-
-      - name: Push Docker image
-        run: |
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:latest \
+            --image=docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest \
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
@@ -812,6 +818,8 @@ jobs:
 
 **Purpose:** Deploy stable releases to production with versioning
 
+**Note:** Uses Docker Hub (free tier) instead of Artifact Registry to minimize costs.
+
 ```yaml
 name: Deploy to Production
 
@@ -823,11 +831,16 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GCP_REGION }}
   SERVICE_NAME: techpioneers-prod
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_NAME: techpioneers
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      packages: write
 
     steps:
       - name: Checkout code
@@ -842,6 +855,24 @@ jobs:
           echo "version=v${VERSION}" >> $GITHUB_OUTPUT
           echo "Deploying version: v${VERSION}"
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -f Dockerfile.prod \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable \
+            .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -850,26 +881,10 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
-
-      - name: Build Docker image
-        run: |
-          docker build -f Dockerfile.prod \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:stable \
-            .
-
-      - name: Push Docker image
-        run: |
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:stable
-
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
+            --image=docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
@@ -892,12 +907,10 @@ jobs:
           echo "Production deployed to: $SERVICE_URL"
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
           body: |
             🚀 Production deployment of TechPioneers ${{ steps.version.outputs.version }}
 
@@ -910,6 +923,7 @@ jobs:
             **Changes:** See commit history for details.
           draft: false
           prerelease: false
+          generate_release_notes: true
 ```
 
 **Deployment URL:** `https://techpioneers-prod-[random].run.app`
@@ -1236,22 +1250,33 @@ gcloud config set project $PROJECT_ID
 # Enable Cloud Run API
 gcloud services enable run.googleapis.com
 
-# Enable Artifact Registry API
-gcloud services enable artifactregistry.googleapis.com
+# Note: We skip Artifact Registry API since we use Docker Hub (free) to avoid storage costs
+# gcloud services enable artifactregistry.googleapis.com
 
-# Enable Cloud Build API (for GitHub Actions)
+# Enable Cloud Build API (optional, for advanced CI/CD features)
 gcloud services enable cloudbuild.googleapis.com
 ```
 
-#### Create Artifact Registry Repository
+#### Docker Hub Setup (Replaces Artifact Registry)
 
-```bash
-# Create Docker repository in Artifact Registry
-gcloud artifacts repositories create techpioneers \
-  --repository-format=docker \
-  --location=us-central1 \
-  --description="TechPioneers Docker images"
-```
+**Why Docker Hub?**
+
+- Free tier for public images (unlimited pulls)
+- No storage costs (Artifact Registry charges $0.10/GB/month)
+- Sufficient for portfolio/demo projects
+- Easy integration with GitHub Actions
+
+**Setup Steps:**
+
+1. Create a Docker Hub account
+2. Create an access token:
+   - Go to docker to generate an access token.
+   - Click "New Access Token"
+   - Name: `github-actions-techpioneers`
+   - Permissions: Read, Write, Delete
+   - Copy the token (you won't see it again)
+
+3. Your images will be stored at: `docker.io/YOUR_USERNAME/techpioneers`
 
 #### Setup Service Account for GitHub Actions
 
@@ -1269,9 +1294,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:github-actions-deployer@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/iam.serviceAccountUser"
 
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --member="serviceAccount:github-actions-deployer@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --role="roles/artifactregistry.writer"
+# Note: We don't need artifactregistry.writer since we use Docker Hub
+# gcloud projects add-iam-policy-binding $PROJECT_ID \
+#   --member="serviceAccount:github-actions-deployer@${PROJECT_ID}.iam.gserviceaccount.com" \
+#   --role="roles/artifactregistry.writer"
 
 # Create and download service account key
 gcloud iam service-accounts keys create key.json \
@@ -1288,40 +1314,41 @@ Add these secrets to your GitHub repository (Settings → Secrets and variables 
 GCP_PROJECT_ID: your-project-id
 GCP_SA_KEY: <contents of key.json>
 GCP_REGION: us-central1
+DOCKERHUB_USERNAME: your-dockerhub-username
+DOCKERHUB_TOKEN: <your Docker Hub access token>
 ```
 
 ### Deployment Commands (Manual)
 
 For manual deployments or testing:
 
-#### Build and Push to Artifact Registry
+#### Build and Push to Docker Hub
 
 ```bash
 # Set variables
-export PROJECT_ID="your-project-id"
-export REGION="us-central1"
+export DOCKERHUB_USERNAME="your-dockerhub-username"
 export IMAGE_NAME="techpioneers"
 export VERSION="v1.0.0"
 
+# Login to Docker Hub
+docker login
+
 # Build production image
-docker build -f Dockerfile.prod -t ${IMAGE_NAME}:${VERSION} .
+docker build -f Dockerfile.prod -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} .
 
-# Tag for Artifact Registry
-docker tag ${IMAGE_NAME}:${VERSION} \
-  ${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION}
+# Push to Docker Hub
+docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION}
 
-# Configure Docker authentication
-gcloud auth configure-docker ${REGION}-docker.pkg.dev
-
-# Push to Artifact Registry
-docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION}
+# Tag as stable
+docker tag ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:stable
+docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:stable
 ```
 
 #### Deploy to Cloud Run (Staging)
 
 ```bash
 gcloud run deploy techpioneers-staging \
-  --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION} \
+  --image=docker.io/${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest \
   --platform=managed \
   --region=${REGION} \
   --allow-unauthenticated \
@@ -1339,7 +1366,7 @@ gcloud run deploy techpioneers-staging \
 
 ```bash
 gcloud run deploy techpioneers-prod \
-  --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION} \
+  --image=docker.io/${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} \
   --platform=managed \
   --region=${REGION} \
   --allow-unauthenticated \
@@ -1526,7 +1553,7 @@ If you need even more cost savings, consider these alternatives:
 - [x] Set up Vite project structure
 - [x] Configure ESLint, Prettier, Husky
 - [x] Create Docker configurations
-- [ ] Set up GitHub Actions workflows
+- [x] Set up GitHub Actions workflows
 - [x] Write README.md and AGENTS.md
 - [x] Initial commit to `main` branch
 
