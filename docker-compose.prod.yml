@@ -1,0 +1,12 @@
+name: techpioneers-prod
+services:
+  web:
+    build:
+      dockerfile: Dockerfile.prod
+    container_name: web
+    env_file:
+      - .env.production
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
