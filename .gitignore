@@ -129,6 +129,7 @@ key.json
 *.DS_Store
 .AppleDouble
 .LSOverride
+**/*.DS_Store
 
 # Linux
 *~
