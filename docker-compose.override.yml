@@ -1,0 +1,14 @@
+name: techpioneers-local
+services:
+  web:
+    build:
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    environment:
+      - NODE_ENV=development
