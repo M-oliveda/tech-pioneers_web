@@ -37,7 +37,10 @@
    ============================================ */
 
 /* Header */
-/* @import "./components/header.css"; */
+@import "./components/header.css";
+
+/* Theme Switcher */
+@import "./components/theme-switcher.css";
 
 /* Hero Section */
 /* @import "./components/hero.css"; */
@@ -59,9 +62,6 @@
 
 /* Footer */
 /* @import "./components/footer.css"; */
-
-/* Theme Switcher */
-/* @import "./components/theme-switcher.css"; */
 
 /* ============================================
    UTILITY STYLES
@@ -87,6 +87,7 @@ html {
 }
 
 body {
+  padding: 8px;
   background-color: var(--color-background);
   color: var(--color-text-primary);
   transition:
