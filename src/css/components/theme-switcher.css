@@ -1,0 +1,166 @@
+/**
+ * Theme Switcher Component
+ * 
+ * BEM Methodology:
+ * Block: theme-switcher
+ * Elements: __icon
+ * Modifiers: N/A
+ */
+
+/* ============================================
+   THEME SWITCHER BLOCK
+   ============================================ */
+
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--color-text-primary);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-base);
+}
+
+.theme-switcher:hover {
+  background-color: var(--color-background);
+}
+
+.theme-switcher:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.theme-switcher:active {
+  transform: scale(0.95);
+  transition: transform var(--transition-fast);
+}
+
+/* ============================================
+   THEME SWITCHER ICON
+   ============================================ */
+
+.theme-switcher__icon {
+  width: 24px;
+  height: 24px;
+  /* Use color from navigation links (secondary text color) */
+  filter: brightness(0) saturate(100%) invert(47%) sepia(8%) saturate(664%)
+    hue-rotate(183deg) brightness(92%) contrast(89%);
+  transition:
+    filter var(--transition-base),
+    transform var(--transition-base);
+}
+
+.theme-switcher:hover .theme-switcher__icon {
+  /* Primary color on hover to match nav links */
+  filter: brightness(0) saturate(100%) invert(45%) sepia(93%) saturate(3098%)
+    hue-rotate(222deg) brightness(99%) contrast(98%);
+}
+
+/* Dark mode adjustments to match navigation text colors */
+[data-theme="dark"] .theme-switcher__icon {
+  filter: brightness(0) saturate(100%) invert(93%) sepia(0%) saturate(0%)
+    hue-rotate(207deg) brightness(104%) contrast(100%);
+}
+
+[data-theme="dark"] .theme-switcher:hover .theme-switcher__icon {
+  filter: brightness(0) saturate(100%) invert(45%) sepia(93%) saturate(3098%)
+    hue-rotate(222deg) brightness(99%) contrast(98%);
+}
+
+/* Icon animation on toggle */
+.theme-switcher__icon--sun {
+  display: block;
+}
+
+.theme-switcher__icon--moon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-switcher__icon--sun {
+  display: none;
+}
+
+[data-theme="dark"] .theme-switcher__icon--moon {
+  display: block;
+}
+
+/* Rotation animation when switching themes */
+@keyframes rotate-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+.theme-switcher__icon--animating {
+  animation: rotate-icon var(--transition-base) ease-in-out;
+}
+
+/* ============================================
+   DESKTOP BREAKPOINT (1024px+)
+   ============================================ */
+
+@media (min-width: 1024px) {
+  .theme-switcher {
+    width: 44px;
+    height: 44px;
+  }
+
+  .theme-switcher__icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Screen reader text */
+.theme-switcher__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .theme-switcher__icon {
+    transition: color var(--transition-fast);
+  }
+
+  .theme-switcher__icon--animating {
+    animation: none;
+  }
+
+  .theme-switcher:active {
+    transform: none;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .theme-switcher {
+    display: none;
+  }
+}
