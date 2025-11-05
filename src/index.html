@@ -100,8 +100,257 @@
     />
   </head>
   <body>
-    <h1>Hello World</h1>
-    <p>TechPioneers - Coming Soon</p>
+    <!-- Skip to main content link (Accessibility) -->
+    <a
+      href="#main-content"
+      class="header__skip-link"
+    >
+      Skip to main content
+    </a>
+
+    <!-- Header -->
+    <header class="header">
+      <!-- Logo -->
+      <a
+        href="/"
+        class="header__logo"
+        aria-label="TechPioneers Home"
+      >
+        <img
+          src="/assets/images/logo_light.svg"
+          alt="TechPioneers Logo"
+          class="header__logo-image"
+        />
+      </a>
+      <!-- Desktop Navigation -->
+      <nav
+        class="header__nav"
+        aria-label="Main navigation"
+      >
+        <ul class="header__nav-list">
+          <li class="header__nav-item">
+            <a
+              href="#featured"
+              class="header__nav-link header__nav-link--active"
+            >
+              Featured
+            </a>
+          </li>
+          <li class="header__nav-item">
+            <a
+              href="#pioneers"
+              class="header__nav-link"
+            >
+              Pioneers
+            </a>
+          </li>
+          <li class="header__nav-item">
+            <a
+              href="#timeline"
+              class="header__nav-link"
+            >
+              Timeline
+            </a>
+          </li>
+          <li class="header__nav-item">
+            <a
+              href="#resources"
+              class="header__nav-link"
+            >
+              Resources
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- Mobile/Desktop Controls -->
+      <div class="header__controls">
+        <!-- Theme Switcher -->
+        <button
+          class="theme-switcher"
+          aria-label="Toggle theme"
+          type="button"
+        >
+          <img
+            src="/assets/icons/sun.svg"
+            alt=""
+            class="theme-switcher__icon theme-switcher__icon--sun"
+            aria-hidden="true"
+          />
+          <img
+            src="/assets/icons/moon.svg"
+            alt=""
+            class="theme-switcher__icon theme-switcher__icon--moon"
+            aria-hidden="true"
+          />
+          <span class="theme-switcher__sr-only">Toggle theme</span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          class="header__menu-toggle"
+          aria-label="Toggle mobile menu"
+          aria-expanded="false"
+          type="button"
+        >
+          <img
+            src="/assets/icons/menu.svg"
+            alt=""
+            class="header__menu-icon"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+      <!-- Mobile Navigation Overlay -->
+      <nav
+        class="header__mobile-nav"
+        aria-label="Mobile navigation"
+      >
+        <ul class="header__mobile-nav-list">
+          <li class="header__mobile-nav-item">
+            <a
+              href="#featured"
+              class="header__mobile-nav-link header__mobile-nav-link--active"
+            >
+              Featured
+            </a>
+          </li>
+          <li class="header__mobile-nav-item">
+            <a
+              href="#pioneers"
+              class="header__mobile-nav-link"
+            >
+              Pioneers
+            </a>
+          </li>
+          <li class="header__mobile-nav-item">
+            <a
+              href="#timeline"
+              class="header__mobile-nav-link"
+            >
+              Timeline
+            </a>
+          </li>
+          <li class="header__mobile-nav-item">
+            <a
+              href="#resources"
+              class="header__mobile-nav-link"
+            >
+              Resources
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Temporary sections for navigation testing -->
+      <section
+        id="featured"
+        style="
+          min-height: 100vh;
+          padding: 2rem;
+          background-color: var(--color-background);
+        "
+      >
+        <h2
+          style="
+            font-family: var(--font-heading);
+            color: var(--color-text-primary);
+          "
+        >
+          Featured Pioneers
+        </h2>
+        <p
+          style="
+            font-family: var(--font-body);
+            color: var(--color-text-secondary);
+          "
+        >
+          This section will contain the featured pioneers carousel.
+        </p>
+      </section>
+
+      <section
+        id="pioneers"
+        style="
+          min-height: 100vh;
+          padding: 2rem;
+          background-color: var(--color-surface);
+        "
+      >
+        <h2
+          style="
+            font-family: var(--font-heading);
+            color: var(--color-text-primary);
+          "
+        >
+          More Pioneers
+        </h2>
+        <p
+          style="
+            font-family: var(--font-body);
+            color: var(--color-text-secondary);
+          "
+        >
+          This section will contain the clickable pioneers carousel.
+        </p>
+      </section>
+
+      <section
+        id="timeline"
+        style="
+          min-height: 100vh;
+          padding: 2rem;
+          background-color: var(--color-background);
+        "
+      >
+        <h2
+          style="
+            font-family: var(--font-heading);
+            color: var(--color-text-primary);
+          "
+        >
+          Timeline
+        </h2>
+        <p
+          style="
+            font-family: var(--font-body);
+            color: var(--color-text-secondary);
+          "
+        >
+          This section will contain the historical timeline.
+        </p>
+      </section>
+
+      <section
+        id="resources"
+        style="
+          min-height: 100vh;
+          padding: 2rem;
+          background-color: var(--color-surface);
+        "
+      >
+        <h2
+          style="
+            font-family: var(--font-heading);
+            color: var(--color-text-primary);
+          "
+        >
+          Resources
+        </h2>
+        <p
+          style="
+            font-family: var(--font-body);
+            color: var(--color-text-secondary);
+          "
+        >
+          This section will contain additional resources.
+        </p>
+      </section>
+    </main>
+
+    <!-- Scripts -->
     <script
       type="module"
       src="/js/main.js"
