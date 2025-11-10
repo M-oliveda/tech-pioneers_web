@@ -1,9 +1,9 @@
-name: techpioneers-staging
+name: techpioneers_staging
 services:
   web:
     build:
       dockerfile: Dockerfile.prod
-    container_name: web
+    container_name: techpioneers_staging_web
     env_file:
       - .env.staging
     ports:

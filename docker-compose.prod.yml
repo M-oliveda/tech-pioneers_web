@@ -1,9 +1,9 @@
-name: techpioneers-prod
+name: techpioneers_prod
 services:
   web:
     build:
       dockerfile: Dockerfile.prod
-    container_name: web
+    container_name: techpioneers_prod_web
     env_file:
       - .env.production
     ports:
