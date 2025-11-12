@@ -1,0 +1,210 @@
+/**
+ * Resources Section
+ *
+ * Styles the curated resources list with category groupings.
+ * Follows BEM naming and mobile-first responsive approach.
+ */
+
+/* ============================================
+   SECTION WRAPPER
+   ============================================ */
+
+.resources {
+  padding: var(--spacing-md) var(--spacing-sm);
+  background-color: var(--color-background);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.resources__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.resources__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
+  color: var(--color-text-primary);
+  transition: color var(--transition-base);
+}
+
+/* ============================================
+   RESOURCE GROUPS
+   ============================================ */
+
+.resources__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.resources__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.resources__group-label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-small);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-base);
+}
+
+.resources__list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-sm);
+  list-style: none;
+}
+
+/* ============================================
+   RESOURCE ITEM
+   ============================================ */
+
+.resources__item {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.resources__icon {
+  flex-shrink: 0;
+  width: calc(var(--spacing-sm) * 3.5);
+  height: calc(var(--spacing-sm) * 3.5);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background-color: #3a3a3c;
+  transition: background-color var(--transition-base);
+}
+
+.resources__icon::after {
+  content: "";
+  width: calc(var(--spacing-sm) * 1.5);
+  height: calc(var(--spacing-sm) * 1.5);
+  background-color: #ffffff;
+  mask: var(--resources-icon-mask) no-repeat center;
+  mask-size: contain;
+  -webkit-mask: var(--resources-icon-mask) no-repeat center;
+  -webkit-mask-size: contain;
+  transition: background-color var(--transition-base);
+}
+
+.resources__icon--book {
+  --resources-icon-mask: url("/assets/icons/book.svg");
+}
+
+.resources__icon--file {
+  --resources-icon-mask: url("/assets/icons/file.svg");
+}
+
+.resources__icon--calendar {
+  --resources-icon-mask: url("/assets/icons/calendar.svg");
+}
+
+.resources__icon--globe {
+  --resources-icon-mask: url("/assets/icons/globe.svg");
+}
+
+.resources__content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-xs) * 0.5);
+}
+
+.resources__item-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h3);
+  color: var(--color-text-primary);
+  transition: color var(--transition-base);
+}
+
+.resources__item-description {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-body-small);
+  color: var(--color-text-secondary);
+  transition: color var(--transition-base);
+}
+
+/* ============================================
+   DARK THEME
+   ============================================ */
+
+[data-theme="dark"] .resources__item {
+  border-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
+}
+
+/* ============================================
+   HOVER/FOCUS STATES
+   ============================================ */
+
+@media (hover: hover) {
+  .resources__item:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.resources__item:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (min-width: 768px) {
+  .resources {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .resources__groups {
+    gap: var(--spacing-md);
+  }
+
+  .resources__list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .resources {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1440px) {
+  .resources__list {
+    grid-template-columns: 1fr;
+  }
+}

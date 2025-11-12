@@ -1,0 +1,67 @@
+/**
+ * More Pioneers Section
+ * 
+ * Contains the grid layout for clickable pioneer cards
+ * Mobile-first responsive design
+ */
+
+/* ============================================
+   MORE PIONEERS SECTION
+   ============================================ */
+
+.more-pioneers {
+  padding: var(--spacing-md) var(--spacing-sm);
+  transition: background-color var(--transition-base);
+}
+
+.more-pioneers__container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* Section Heading */
+.more-pioneers__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
+  color: var(--color-text-primary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .more-pioneers {
+    padding: var(--spacing-md);
+  }
+
+  .more-pioneers__container {
+    gap: var(--spacing-md);
+  }
+
+  .more-pioneers__title {
+    font-size: calc(var(--font-size-h2) * 1.5);
+    line-height: calc(var(--line-height-h2) * 1.375);
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .more-pioneers {
+    padding: var(--spacing-lg);
+  }
+
+  .more-pioneers__title {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+  }
+}

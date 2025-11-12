@@ -1,0 +1,334 @@
+/**
+ * Modal Component
+ * 
+ * Accessible modal/dialog component with:
+ * - Focus trap
+ * - ESC key to close
+ * - Click outside to close
+ * - Body scroll lock
+ * - Smooth animations
+ */
+
+/* ============================================
+   MODAL BACKDROP
+   ============================================ */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-index-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-base),
+    visibility var(--transition-base);
+  backdrop-filter: blur(4px);
+}
+
+/* Backdrop Active State */
+.modal-backdrop--active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Dark Theme Backdrop */
+[data-theme="dark"] .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================
+   MODAL CONTAINER
+   ============================================ */
+
+.modal {
+  position: relative;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.9);
+  opacity: 0;
+  transition:
+    transform var(--transition-base),
+    opacity var(--transition-base);
+  z-index: var(--z-index-modal);
+  border: 1px solid var(--color-border);
+}
+
+/* Modal Active State */
+.modal-backdrop--active .modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ============================================
+   MODAL HEADER
+   ============================================ */
+
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.modal__header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  min-width: 0;
+}
+
+.modal__avatar {
+  width: calc(var(--spacing-sm) * 5);
+  height: calc(var(--spacing-sm) * 5);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.modal__avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modal__title-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+  transition: color var(--transition-base);
+}
+
+.modal__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-small);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body-small);
+  color: var(--color-text-secondary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+/* Close Button */
+.modal__close {
+  width: calc(var(--spacing-sm) * 2);
+  height: calc(var(--spacing-sm) * 2);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+  color: var(--color-text-secondary);
+  font-size: calc(var(--font-size-body) * 1.25);
+  padding: 0;
+}
+
+.modal__close:hover {
+  background-color: var(--color-background);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.modal__close:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.modal__close:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   MODAL BODY
+   ============================================ */
+
+.modal__body {
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.modal__section-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  margin: var(--spacing-sm) 0 calc(var(--spacing-xs) * 0.625) 0;
+  transition: color var(--transition-base);
+}
+
+.modal__section-title:first-child {
+  margin-top: 0;
+}
+
+.modal__text {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+.modal__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-xs) * 0.625);
+}
+
+.modal__list-item {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+  padding-left: var(--spacing-sm);
+  position: relative;
+  transition: color var(--transition-base);
+}
+
+.modal__list-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ============================================
+   BODY SCROLL LOCK
+   ============================================ */
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .modal {
+    max-width: 720px;
+  }
+
+  .modal__header {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .modal__body {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .modal__avatar {
+    width: calc(var(--spacing-sm) * 6);
+    height: calc(var(--spacing-sm) * 6);
+  }
+
+  .modal__title {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+  }
+
+  .modal__close {
+    width: calc(var(--spacing-sm) * 2.5);
+    height: calc(var(--spacing-sm) * 2.5);
+    font-size: calc(var(--font-size-body) * 1.5);
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .modal {
+    max-width: 800px;
+  }
+
+  .modal__header {
+    padding: var(--spacing-lg);
+  }
+
+  .modal__body {
+    padding: var(--spacing-lg);
+  }
+
+  .modal__avatar {
+    width: calc(var(--spacing-sm) * 7);
+    height: calc(var(--spacing-sm) * 7);
+  }
+
+  .modal__title {
+    font-size: calc(var(--font-size-h2) * 0.875);
+    line-height: calc(var(--line-height-h2) * 0.9);
+  }
+
+  .modal__section-title {
+    font-size: var(--font-size-h3);
+    line-height: var(--line-height-h3);
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal,
+  .modal__close {
+    transition: none;
+  }
+
+  .modal-backdrop--active .modal {
+    transform: scale(1);
+  }
+
+  .modal__close:active {
+    transform: none;
+  }
+}
