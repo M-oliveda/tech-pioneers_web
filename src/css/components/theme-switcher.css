@@ -15,8 +15,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: calc(var(--spacing-sm) * 1.5);
+  height: calc(var(--spacing-sm) * 1.5);
   padding: 0;
   color: var(--color-text-primary);
   background-color: transparent;
@@ -45,31 +45,14 @@
    ============================================ */
 
 .theme-switcher__icon {
-  width: 24px;
-  height: 24px;
+  width: calc(var(--spacing-sm) * 1.5);
+  height: calc(var(--spacing-sm) * 1.5);
   /* Use color from navigation links (secondary text color) */
   filter: brightness(0) saturate(100%) invert(47%) sepia(8%) saturate(664%)
     hue-rotate(183deg) brightness(92%) contrast(89%);
   transition:
     filter var(--transition-base),
     transform var(--transition-base);
-}
-
-.theme-switcher:hover .theme-switcher__icon {
-  /* Primary color on hover to match nav links */
-  filter: brightness(0) saturate(100%) invert(45%) sepia(93%) saturate(3098%)
-    hue-rotate(222deg) brightness(99%) contrast(98%);
-}
-
-/* Dark mode adjustments to match navigation text colors */
-[data-theme="dark"] .theme-switcher__icon {
-  filter: brightness(0) saturate(100%) invert(93%) sepia(0%) saturate(0%)
-    hue-rotate(207deg) brightness(104%) contrast(100%);
-}
-
-[data-theme="dark"] .theme-switcher:hover .theme-switcher__icon {
-  filter: brightness(0) saturate(100%) invert(45%) sepia(93%) saturate(3098%)
-    hue-rotate(222deg) brightness(99%) contrast(98%);
 }
 
 /* Icon animation on toggle */
@@ -109,13 +92,13 @@
 
 @media (min-width: 1024px) {
   .theme-switcher {
-    width: 44px;
-    height: 44px;
+    width: calc(var(--spacing-sm) * 2.75);
+    height: calc(var(--spacing-sm) * 2.75);
   }
 
   .theme-switcher__icon {
-    width: 28px;
-    height: 28px;
+    width: calc(var(--spacing-sm) * 1.75);
+    height: calc(var(--spacing-sm) * 1.75);
   }
 }
 
