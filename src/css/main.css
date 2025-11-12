@@ -43,29 +43,48 @@
 @import "./components/theme-switcher.css";
 
 /* Hero Section */
-/* @import "./components/hero.css"; */
+@import "./components/hero.css";
 
 /* Pioneer Card */
-/* @import "./components/pioneer-card.css"; */
+@import "./components/pioneer-card.css";
+
+/* Featured Pioneers Section */
+@import "./components/featured-pioneers.css";
+
+/* More Pioneers Section */
+@import "./components/more-pioneers.css";
 
 /* Carousel */
-/* @import "./components/carousel.css"; */
+@import "./components/carousel.css";
 
 /* Modal */
-/* @import "./components/modal.css"; */
+@import "./components/modal.css";
 
 /* Timeline */
-/* @import "./components/timeline.css"; */
+@import "./components/timeline.css";
 
 /* Resources Section */
-/* @import "./components/resources.css"; */
+@import "./components/resources.css";
 
 /* Footer */
-/* @import "./components/footer.css"; */
+@import "./components/footer.css";
+
+/* ============================================
+   LAYOUT STYLES
+   ============================================ */
+
+/* Timeline & Resources Container Layout */
+@import "./layout/timeline-resources-container.css";
+
+/* Timeline & Resources Container */
+@import "./layout/timeline-resources-container.css";
 
 /* ============================================
    UTILITY STYLES
    ============================================ */
+
+/* Custom Scrollbar */
+@import "./utilities/scrollbar.css";
 
 /* Animations */
 /* @import "./utilities/animations.css"; */
@@ -84,10 +103,11 @@
 html {
   background-color: var(--color-background);
   transition: background-color var(--transition-base);
+  scroll-behavior: smooth;
 }
 
 body {
-  padding: 8px;
+  padding: var(--spacing-xs);
   background-color: var(--color-background);
   color: var(--color-text-primary);
   transition:
