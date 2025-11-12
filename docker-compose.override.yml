@@ -1,8 +1,9 @@
-name: techpioneers-local
+name: techpioneers_local
 services:
   web:
     build:
       dockerfile: Dockerfile.dev
+    container_name: techpioneers_local_web
     env_file:
       - .env
     ports:

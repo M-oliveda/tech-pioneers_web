@@ -1,0 +1,120 @@
+/**
+ * Custom Scrollbar Styles
+ * 
+ * Modern scrollbar styling that matches the project's design system
+ * Provides consistent appearance across light and dark themes
+ * 
+ * Note: Uses ::-webkit-scrollbar for Chromium-based browsers
+ * and scrollbar-* properties for Firefox
+ */
+
+/* ============================================
+   FIREFOX SCROLLBAR STYLES
+   ============================================ */
+
+* {
+  /* Scrollbar width: auto | thin | none */
+  scrollbar-width: thin;
+
+  /* Scrollbar colors: thumb-color track-color */
+  scrollbar-color: var(--color-border) transparent;
+}
+
+/* ============================================
+   WEBKIT SCROLLBAR STYLES (Chrome, Safari, Edge)
+   ============================================ */
+
+/* Scrollbar track (background) */
+::-webkit-scrollbar {
+  width: calc(var(--spacing-xs) * 1.5);
+  height: calc(var(--spacing-xs) * 1.5);
+}
+
+/* Track background with spacing */
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: calc(var(--spacing-xs) * 0.5);
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  border: 3px solid var(--color-background);
+  transition: background-color var(--transition-fast);
+}
+
+/* Thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-secondary);
+}
+
+/* Thumb when actively dragging */
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--color-primary);
+}
+
+/* Corner where horizontal and vertical scrollbars meet */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ============================================
+   THEMED SCROLLBAR VARIATIONS
+   ============================================ */
+
+/* 
+ * Dark theme automatically inherits the CSS variables
+ * so no additional styling needed here
+ */
+
+/* ============================================
+   MODAL & OVERLAY SCROLLBAR
+   ============================================ */
+
+/* 
+ * Optional: Specific scrollbar styling for modals
+ * to ensure visibility against different backgrounds
+ */
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: var(--color-text-secondary);
+  border-color: var(--color-surface);
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* 
+ * Ensure scrollbar is always visible for users who prefer reduced motion
+ * as it provides better orientation feedback
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::-webkit-scrollbar-thumb {
+    transition: none;
+  }
+}
+
+/* ============================================
+   RESPONSIVE SCROLLBAR
+   ============================================ */
+
+/* Thinner scrollbar on mobile devices */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: var(--spacing-xs);
+    height: var(--spacing-xs);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-width: 2px;
+  }
+
+  ::-webkit-scrollbar-track {
+    margin: calc(var(--spacing-xs) * 0.25);
+  }
+}

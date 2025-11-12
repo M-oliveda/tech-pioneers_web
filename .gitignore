@@ -85,6 +85,9 @@ dist/
 .cache/
 public/
 
+# Ensure public directory is not ignored
+!public/
+
 # Serverless directories
 .serverless/
 
@@ -126,6 +129,7 @@ key.json
 *.DS_Store
 .AppleDouble
 .LSOverride
+**/*.DS_Store
 
 # Linux
 *~

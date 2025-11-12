@@ -12,6 +12,11 @@ export default [
         document: "readonly",
         navigator: "readonly",
         console: "readonly",
+        localStorage: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
         // Node globals (for config files)
         process: "readonly",
         __dirname: "readonly",
@@ -58,11 +63,6 @@ export default [
     },
   },
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-      ".vite/**",
-    ],
+    ignores: ["node_modules/**", "dist/**", "build/**", ".vite/**"],
   },
 ];

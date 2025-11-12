@@ -1,0 +1,265 @@
+/**
+ * Timeline Component
+ * 
+ * Displays a historical timeline of key events in technology history.
+ * Simple vertical layout with calendar icons and text content.
+ * 
+ * BEM Structure:
+ * - .timeline (Block)
+ * - .timeline__container (Element)
+ * - .timeline__title (Element)
+ * - .timeline__list (Element)
+ * - .timeline__item (Element)
+ * - .timeline__item-icon (Element)
+ * - .timeline__item-content (Element)
+ * - .timeline__item-title (Element)
+ * - .timeline__item-description (Element)
+ */
+
+/* ============================================
+   TIMELINE SECTION
+   ============================================ */
+
+.timeline {
+  padding: var(--spacing-md) var(--spacing-sm);
+  transition: background-color var(--transition-base);
+  --timeline-line-color: #e5e5ea;
+  --timeline-icon-background: #e5e5ea;
+}
+
+/* ============================================
+   TIMELINE CONTAINER
+   ============================================ */
+
+.timeline__container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* ============================================
+   TIMELINE TITLE
+   ============================================ */
+
+.timeline__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h2);
+  letter-spacing: var(--letter-spacing-h2);
+  color: var(--color-text-primary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+/* ============================================
+   TIMELINE LIST
+   ============================================ */
+
+.timeline__list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* ============================================
+   TIMELINE ITEM
+   ============================================ */
+
+.timeline__item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+/* Connecting line between timeline items */
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: 19px; /* Center of the 40px icon (20px - 1px for the 2px line) */
+  top: 0; /* Start from the top of the item */
+  width: 2px;
+  height: calc(100% + 2rem); /* Full height of item + gap */
+  background-color: var(--timeline-line-color);
+  z-index: 0;
+}
+
+/* First item: line starts from icon center */
+.timeline__item:first-child::before {
+  top: 20px; /* Start from center of 40px icon */
+  height: calc(100% + 2rem - 20px);
+}
+
+/* Last item: line ends at icon center */
+.timeline__item:last-child::before {
+  height: 20px; /* End at center of 40px icon */
+}
+
+/* ============================================
+   TIMELINE ITEM ICON
+   ============================================ */
+
+.timeline__item-icon {
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+  width: calc(var(--spacing-sm) * 2.5);
+  height: calc(var(--spacing-sm) * 2.5);
+  padding: var(--spacing-xs);
+  margin-top: calc(var(--spacing-xs) * 0.5);
+  border-radius: var(--radius-md);
+  background-color: var(--timeline-icon-background);
+  border: 2px solid var(--timeline-line-color);
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base);
+  z-index: 1;
+}
+
+/* ============================================
+   TIMELINE ITEM CONTENT
+   ============================================ */
+
+.timeline__item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline__item-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
+  color: var(--color-text-primary);
+  margin-bottom: calc(var(--spacing-xs) * 0.625);
+}
+
+.timeline__item-description {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-small);
+  line-height: var(--line-height-body-small);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .timeline {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .timeline__container {
+    gap: var(--spacing-md);
+  }
+
+  .timeline__title {
+    font-size: calc(var(--font-size-h2) * 1.5);
+    line-height: calc(var(--line-height-h2) * 1.375);
+  }
+
+  .timeline__list {
+    gap: calc(var(--spacing-md) * 1.25);
+    margin: var(--spacing-md);
+  }
+
+  .timeline__item {
+    gap: calc(var(--spacing-sm) * 1.5);
+  }
+
+  .timeline__item::before {
+    left: 13px; /* Center of the 28px icon (14px - 1px for the 2px line) */
+    height: calc(100% + 2.5rem); /* Full height of item + gap */
+  }
+
+  .timeline__item:first-child::before {
+    top: 14px; /* Start from center of 28px icon */
+    height: calc(100% + 2.5rem - 14px);
+  }
+
+  .timeline__item:last-child::before {
+    height: 14px; /* End at center of 28px icon */
+  }
+
+  .timeline__item-icon {
+    width: calc(var(--spacing-sm) * 1.75);
+    height: calc(var(--spacing-sm) * 1.75);
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .timeline {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+
+  .timeline__title {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+  }
+
+  .timeline__list {
+    gap: 48px; /* 1.5 * 32px */
+    margin: 0;
+  }
+
+  .timeline__item {
+    gap: var(--spacing-md);
+  }
+
+  .timeline__item::before {
+    left: 15px; /* Center of the 32px icon (16px - 1px for the 2px line) */
+    height: calc(100% + 48px); /* Full height of item + gap */
+  }
+
+  .timeline__item:first-child::before {
+    top: 16px; /* Start from center of 32px icon */
+    height: calc(100% + 48px - 16px);
+  }
+
+  .timeline__item:last-child::before {
+    height: 16px; /* End at center of 32px icon */
+  }
+
+  .timeline__item-icon {
+    width: 32px; /* 2 * 16px */
+    height: 32px; /* 2 * 16px */
+  }
+}
+
+/* ============================================
+   DARK THEME SUPPORT
+   ============================================ */
+
+[data-theme="dark"] .timeline {
+  --timeline-line-color: #a1a1a6;
+  --timeline-icon-background: #a1a1a6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .timeline {
+    --timeline-line-color: #8e8e93;
+    --timeline-icon-background: #3f3f43;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .timeline__item-icon {
+    transition: none;
+  }
+}

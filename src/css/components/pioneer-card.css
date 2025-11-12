@@ -1,0 +1,324 @@
+/**
+ * Pioneer Card Component
+ * 
+ * This component has two variants:
+ * 1. Featured Pioneer Card - Vertical layout with circular avatar
+ * 2. More Pioneers Card - Horizontal layout with rounded square avatar (clickable)
+ * 
+ * Both variants support light/dark themes and responsive design
+ */
+
+/* ============================================
+   BASE PIONEER CARD
+   ============================================ */
+
+.pioneer-card {
+  display: flex;
+}
+
+/* ============================================
+   FEATURED VARIANT
+   ============================================ */
+
+.pioneer-card--featured {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-sm);
+  gap: var(--spacing-sm) 0;
+  max-width: 240px;
+}
+
+/* Featured Avatar */
+.pioneer-card--featured .pioneer-card__avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color var(--transition-base);
+}
+
+.pioneer-card--featured .pioneer-card__avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Featured Content */
+.pioneer-card--featured .pioneer-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  width: 100%;
+}
+
+.pioneer-card--featured .pioneer-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-h3);
+  letter-spacing: var(--letter-spacing-h3);
+  color: var(--color-text-primary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+.pioneer-card--featured .pioneer-card__description {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-small);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body-small);
+  color: var(--color-text-secondary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+/* ============================================
+   CLICKABLE VARIANT (More Pioneers)
+   ============================================ */
+
+.pioneer-card--clickable {
+  flex-direction: column;
+  padding: var(--spacing-sm);
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  max-width: 350px;
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  position: relative;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+/* Hover & Focus States for Clickable */
+.pioneer-card--clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.pioneer-card--clickable:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.pioneer-card--clickable:active {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Clickable Avatar */
+.pioneer-card--clickable .pioneer-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: var(--color-background);
+  transition: transform var(--transition-base);
+}
+
+.pioneer-card--clickable:hover .pioneer-card__avatar {
+  transform: scale(1.05);
+}
+
+.pioneer-card--clickable .pioneer-card__avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Clickable Content */
+.pioneer-card--clickable .pioneer-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-xs) * 0.5);
+  flex: 1;
+  min-width: 0; /* Allow text truncation */
+  justify-content: center;
+}
+
+.pioneer-card--clickable .pioneer-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+.pioneer-card--clickable:hover .pioneer-card__title {
+  color: var(--color-primary);
+}
+
+.pioneer-card--clickable .pioneer-card__description {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-small);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body-small);
+  color: var(--color-text-secondary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  transition: color var(--transition-base);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Hidden button for clickable cards (semantic) */
+.pioneer-card__button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 0;
+}
+
+.pioneer-card__button:focus {
+  outline: none; /* Handled by parent focus-within */
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  /* Featured cards slightly larger on tablet */
+  .pioneer-card--featured {
+    max-width: 300px;
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .pioneer-card--featured .pioneer-card__avatar {
+    width: 180px;
+    height: 180px;
+  }
+
+  /* Clickable cards more spacious on tablet */
+  .pioneer-card--clickable {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .pioneer-card--clickable .pioneer-card__avatar {
+    width: 96px;
+    height: 96px;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  /* Featured cards full size on desktop */
+  .pioneer-card--featured {
+    max-width: 320px;
+  }
+
+  .pioneer-card--featured .pioneer-card__avatar {
+    width: 200px;
+    height: 200px;
+    border-width: 4px;
+  }
+
+  .pioneer-card--featured .pioneer-card__title {
+    font-size: var(--font-size-h3);
+    line-height: var(--line-height-h3);
+  }
+
+  .pioneer-card--featured .pioneer-card__description {
+    font-size: var(--font-size-body-small);
+    line-height: var(--line-height-body-small);
+  }
+
+  /* Clickable cards full size on desktop */
+  .pioneer-card--clickable {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .pioneer-card--clickable .pioneer-card__avatar {
+    width: 112px;
+    height: 112px;
+  }
+
+  .pioneer-card--clickable .pioneer-card__title {
+    font-size: var(--font-size-h3);
+    line-height: var(--line-height-h3);
+  }
+
+  .pioneer-card--clickable .pioneer-card__description {
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .pioneer-card--featured {
+    max-width: 360px;
+  }
+
+  .pioneer-card--clickable .pioneer-card__avatar {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* ============================================
+   DARK THEME SPECIFIC ADJUSTMENTS
+   ============================================ */
+
+[data-theme="dark"] .pioneer-card--featured .pioneer-card__avatar {
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .pioneer-card--clickable {
+  background-color: var(--color-surface);
+}
+
+[data-theme="dark"] .pioneer-card--clickable:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pioneer-card,
+  .pioneer-card--clickable:hover,
+  .pioneer-card--clickable .pioneer-card__avatar,
+  .pioneer-card--clickable .pioneer-card__title,
+  .pioneer-card__avatar,
+  .pioneer-card__title,
+  .pioneer-card__description {
+    transition: none;
+  }
+
+  .pioneer-card--clickable:hover {
+    transform: none;
+  }
+
+  .pioneer-card--clickable:hover .pioneer-card__avatar {
+    transform: none;
+  }
+}

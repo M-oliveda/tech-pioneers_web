@@ -1,0 +1,453 @@
+/**
+ * Carousel Component
+ * 
+ * A custom vanilla JS carousel with:
+ * - Touch/swipe support for mobile
+ * - Keyboard navigation (arrow keys)
+ * - Previous/Next buttons at bottom center
+ * - Smooth, enhanced transitions with custom easing
+ * - Ripple effect on button interactions
+ * - Scale animations for visual feedback
+ * - Responsive design
+ * - Accessibility support
+ */
+
+/* ============================================
+   CAROUSEL CUSTOM PROPERTIES
+   ============================================ */
+
+.carousel {
+  /* Spacing */
+  --carousel-slide-gap: 8px;
+
+  /* Animation durations */
+  --carousel-slide-duration: 500ms;
+  --carousel-button-duration: 250ms;
+  --carousel-button-hover-duration: 200ms;
+  --carousel-ripple-duration: 600ms;
+
+  /* Easing functions */
+  --carousel-ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --carousel-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --carousel-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Button styles */
+  --carousel-button-scale-hover: 1.1;
+  --carousel-button-scale-active: 0.95;
+  --carousel-button-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+  --carousel-button-shadow-dark: 0 4px 16px rgba(10, 132, 255, 0.4);
+}
+
+/* Use CSS variables for carousel button colors */
+.carousel {
+  --carousel-button-bg: var(--color-surface);
+  --carousel-button-border: var(--color-border);
+  --carousel-button-text: var(--color-text-primary);
+  --carousel-button-hover-bg: var(--color-primary);
+  --carousel-button-hover-text: var(--color-surface);
+}
+
+/* ============================================
+   CAROUSEL CONTAINER
+   ============================================ */
+
+.carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   CAROUSEL VIEWPORT
+   ============================================ */
+
+.carousel__viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  touch-action: pan-y pinch-zoom;
+}
+
+/* ============================================
+   CAROUSEL TRACK
+   ============================================ */
+
+.carousel__track {
+  display: flex;
+  gap: var(--carousel-slide-gap);
+  padding: var(--spacing-sm);
+  transition: transform 400ms var(--carousel-ease-standard);
+  will-change: transform;
+}
+
+/* Disable transition during drag */
+.carousel__track--dragging {
+  transition: none;
+}
+
+/* Smoother animation when using buttons */
+.carousel__track--animating {
+  transition: transform var(--carousel-slide-duration)
+    var(--carousel-ease-smooth);
+}
+
+/* ============================================
+   CAROUSEL SLIDES
+   ============================================ */
+
+.carousel__slide {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Slide content wrapper */
+.carousel__slide-content {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  transition:
+    transform 300ms var(--carousel-ease-standard),
+    opacity 300ms ease-out;
+}
+
+/* Slide animations during transition */
+.carousel__track--animating .carousel__slide-content {
+  animation: slideIn var(--carousel-slide-duration) var(--carousel-ease-smooth);
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================
+   CAROUSEL CONTROLS
+   ============================================ */
+
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+}
+
+/* Navigation Buttons */
+.carousel__button {
+  width: calc(var(--spacing-sm) * 3);
+  height: calc(var(--spacing-sm) * 3);
+  border-radius: var(--radius-full);
+  background-color: var(--carousel-button-bg);
+  border: 2px solid var(--carousel-button-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--carousel-button-duration)
+      var(--carousel-ease-standard),
+    border-color var(--carousel-button-duration) var(--carousel-ease-standard),
+    color var(--carousel-button-duration) var(--carousel-ease-standard),
+    transform var(--carousel-button-hover-duration) var(--carousel-ease-bounce),
+    opacity var(--carousel-button-duration) ease-out,
+    box-shadow var(--carousel-button-duration) var(--carousel-ease-standard);
+  color: var(--carousel-button-text);
+  font-size: calc(var(--font-size-body) * 1.25);
+  padding: 0;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ripple effect overlay */
+.carousel__button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition:
+    width var(--carousel-ripple-duration) ease-out,
+    height var(--carousel-ripple-duration) ease-out,
+    opacity var(--carousel-ripple-duration) ease-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel__button:hover:not(:disabled) {
+  background-color: var(--carousel-button-hover-bg);
+  border-color: var(--carousel-button-hover-bg);
+  color: var(--carousel-button-hover-text);
+  transform: scale(var(--carousel-button-scale-hover));
+  box-shadow: var(--carousel-button-shadow);
+}
+
+.carousel__button:hover:not(:disabled)::before {
+  width: 120%;
+  height: 120%;
+  opacity: 1;
+}
+
+.carousel__button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.carousel__button:active:not(:disabled) {
+  transform: scale(var(--carousel-button-scale-active));
+  transition:
+    background-color 100ms var(--carousel-ease-standard),
+    border-color 100ms var(--carousel-ease-standard),
+    color 100ms var(--carousel-ease-standard),
+    transform 100ms var(--carousel-ease-standard),
+    box-shadow 100ms var(--carousel-ease-standard);
+}
+
+.carousel__button:active:not(:disabled)::before {
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  transition:
+    width 200ms ease-out,
+    height 200ms ease-out,
+    opacity 200ms ease-out;
+}
+
+.carousel__button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+/* Button Icons */
+.carousel__button-icon {
+  width: calc(var(--spacing-sm) * 1.25);
+  height: calc(var(--spacing-sm) * 1.25);
+  display: block;
+  transition: transform var(--carousel-button-hover-duration)
+    var(--carousel-ease-bounce);
+  position: relative;
+  z-index: 1;
+}
+
+.carousel__button:hover:not(:disabled) .carousel__button-icon {
+  transform: scale(1.1);
+}
+
+.carousel__button:active:not(:disabled) .carousel__button-icon {
+  transform: scale(0.9);
+  transition: transform 100ms var(--carousel-ease-standard);
+}
+
+/* ============================================
+   CAROUSEL INDICATORS (Optional dots)
+   ============================================ */
+
+.carousel__indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.carousel__indicator {
+  width: var(--spacing-xs);
+  height: var(--spacing-xs);
+  border-radius: var(--radius-full);
+  background-color: var(--color-border);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.carousel__indicator:hover {
+  background-color: var(--color-text-secondary);
+  transform: scale(1.2);
+}
+
+.carousel__indicator--active {
+  background-color: var(--color-primary);
+  transform: scale(1.3);
+}
+
+.carousel__indicator:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px+) - Show 2 slides */
+@media (min-width: 768px) {
+  .carousel__track {
+    padding: var(--spacing-md);
+  }
+
+  .carousel__slide {
+    width: 50%;
+  }
+
+  .carousel__controls {
+    gap: var(--spacing-md);
+  }
+
+  .carousel__button {
+    width: calc(var(--spacing-sm) * 3.5);
+    height: calc(var(--spacing-sm) * 3.5);
+    font-size: calc(var(--font-size-body) * 1.5);
+  }
+
+  .carousel__button-icon {
+    width: calc(var(--spacing-sm) * 1.5);
+    height: calc(var(--spacing-sm) * 1.5);
+  }
+}
+
+/* Desktop (1024px+) - Show 4 slides for featured, 2 for more pioneers */
+@media (min-width: 1024px) {
+  /* Featured pioneers - 4 slides visible */
+  .carousel--featured .carousel__slide {
+    width: 25%;
+  }
+
+  /* More pioneers - 2 slides visible */
+  .carousel--more-pioneers .carousel__slide {
+    width: 50%;
+  }
+
+  .carousel__button {
+    width: calc(var(--spacing-sm) * 4);
+    height: calc(var(--spacing-sm) * 4);
+    font-size: calc(var(--font-size-body) * 1.75);
+  }
+
+  .carousel__button-icon {
+    width: calc(var(--spacing-sm) * 1.75);
+    height: calc(var(--spacing-sm) * 1.75);
+  }
+}
+
+/* Large Desktop (1440px+) - Show 3 slides for more pioneers */
+@media (min-width: 1440px) {
+  .carousel--more-pioneers .carousel__slide {
+    width: 33.333%;
+  }
+}
+
+/* ============================================
+   DARK THEME
+   ============================================ */
+
+[data-theme="dark"] .carousel__button {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .carousel__button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: var(--carousel-button-shadow-dark);
+}
+
+[data-theme="dark"] .carousel__button::before {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track,
+  .carousel__track--animating {
+    transition: none;
+  }
+
+  .carousel__button,
+  .carousel__button::before,
+  .carousel__button-icon,
+  .carousel__indicator,
+  .carousel__slide-content {
+    transition: none;
+    animation: none;
+  }
+
+  .carousel__button:hover:not(:disabled),
+  .carousel__button:active:not(:disabled) {
+    transform: none;
+  }
+
+  .carousel__button:hover:not(:disabled) .carousel__button-icon,
+  .carousel__button:active:not(:disabled) .carousel__button-icon {
+    transform: none;
+  }
+
+  .carousel__indicator:hover,
+  .carousel__indicator--active {
+    transform: none;
+  }
+
+  .carousel__track--animating .carousel__slide-content {
+    animation: none;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Screen reader only text */
+.carousel__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible for keyboard navigation */
+.carousel__track:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.carousel--loading .carousel__track {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.carousel--loading .carousel__button {
+  pointer-events: none;
+  opacity: 0.3;
+}
