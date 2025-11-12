@@ -23,17 +23,24 @@ class ThemeSwitcher {
       LIGHT: "light",
       DARK: "dark",
     };
-
-    // Initialize if button exists
-    if (this.themeButton) {
-      this.init();
-    }
   }
 
   /**
    * Initialize theme switcher
    */
   init() {
+    // Check if button exists
+    if (!this.themeButton) {
+      console.warn("Theme switcher button not found");
+      return;
+    }
+
+    // Prevent multiple initializations
+    if (this.initialized) {
+      console.warn("Theme switcher already initialized");
+      return;
+    }
+
     // Load saved theme or detect system preference
     const savedTheme = this.loadPreference();
     const systemTheme = this.getSystemPreference();
@@ -47,6 +54,9 @@ class ThemeSwitcher {
 
     // Listen for system theme changes
     this.watchSystemPreference();
+
+    // Mark as initialized
+    this.initialized = true;
   }
 
   /**

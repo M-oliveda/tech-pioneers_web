@@ -29,6 +29,9 @@ class Navigation {
       ...Array.from(this.desktopNavLinks),
     ];
 
+    // Get all anchor links that point to sections (including CTA buttons)
+    this.allAnchorLinks = document.querySelectorAll('a[href^="#"]');
+
     // Initialize if elements exist
     if (this.menuToggle && this.mobileNav) {
       this.init();
@@ -39,8 +42,11 @@ class Navigation {
    * Initialize event listeners
    */
   init() {
-    // Mobile menu toggle
-    this.menuToggle.addEventListener("click", () => this.toggle());
+    // Mobile menu toggle - stop propagation to prevent document click handler
+    this.menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.toggle();
+    });
 
     // Close mobile menu when clicking on a link
     this.mobileNavLinks.forEach((link) => {
@@ -50,15 +56,31 @@ class Navigation {
     });
 
     // Close mobile menu when clicking outside
-    document.addEventListener("click", (e) => {
-      if (
-        this.isOpen &&
-        !this.mobileNav.contains(e.target) &&
-        !this.menuToggle.contains(e.target)
-      ) {
-        this.close();
-      }
-    });
+    // Use capture phase and check if click is truly outside
+    document.addEventListener(
+      "click",
+      (e) => {
+        if (!this.isOpen) {
+          return;
+        }
+
+        // Check if click is outside both the mobile nav and the header controls
+        const headerControls = document.querySelector(".header__controls");
+        const clickedInsideNav = this.mobileNav.contains(e.target);
+        const clickedInsideToggle = this.menuToggle.contains(e.target);
+        const clickedInsideControls =
+          headerControls && headerControls.contains(e.target);
+
+        if (
+          !clickedInsideNav &&
+          !clickedInsideToggle &&
+          !clickedInsideControls
+        ) {
+          this.close();
+        }
+      },
+      true
+    );
 
     // Handle escape key to close menu
     document.addEventListener("keydown", (e) => {
@@ -90,10 +112,16 @@ class Navigation {
    */
   open() {
     this.isOpen = true;
-    this.mobileNav.classList.add("header__mobile-nav--open");
-    this.mobileNav.style.display = "block";
     this.menuToggle.setAttribute("aria-expanded", "true");
     this.header.style.border = "none";
+    this.header.style.boxShadow = "none";
+
+    // Set display first, then add class to trigger transition
+    this.mobileNav.style.display = "block";
+    // Use requestAnimationFrame to ensure display is applied before transition
+    window.requestAnimationFrame(() => {
+      this.mobileNav.classList.add("header__mobile-nav--open");
+    });
 
     // Prevent body scroll
     this.body.style.overflow = "hidden";
@@ -120,10 +148,10 @@ class Navigation {
   }
 
   /**
-   * Setup smooth scrolling for navigation links
+   * Setup smooth scrolling for all anchor links (navigation and CTAs)
    */
   setupSmoothScroll() {
-    this.allNavLinks.forEach((link) => {
+    this.allAnchorLinks.forEach((link) => {
       link.addEventListener("click", (e) => {
         // Only handle hash links
         const href = link.getAttribute("href");
@@ -137,15 +165,17 @@ class Navigation {
         const targetElement = document.getElementById(targetId);
 
         if (targetElement) {
-          // Get header height for offset
+          // Get header height for offset (including margin)
           const header = document.querySelector(".header");
           const headerHeight = header ? header.offsetHeight : 0;
+          const headerMargin = 16; // 8px top + 8px bottom spacing
 
-          // Calculate scroll position
+          // Calculate scroll position with proper offset
           const targetPosition =
             targetElement.getBoundingClientRect().top +
             window.pageYOffset -
-            headerHeight;
+            headerHeight -
+            headerMargin;
 
           // Smooth scroll to target
           window.scrollTo({
@@ -154,7 +184,7 @@ class Navigation {
           });
 
           // Update URL hash without scrolling
-          history.pushState(null, null, href);
+          window.history.pushState(null, null, href);
 
           // Close mobile menu if open
           if (this.isOpen) {
