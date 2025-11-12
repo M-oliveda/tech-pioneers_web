@@ -1,0 +1,35 @@
+/**
+ * Timeline & Resources Container Layout
+ * 
+ * Container component that arranges the timeline and resources sections
+ * side-by-side on desktop using a two-column grid layout.
+ * 
+ * Mobile-first approach: Single column layout by default, switches to
+ * two-column grid on desktop (1024px+).
+ * 
+ * BEM Structure:
+ * - .timeline-resources-container (Block)
+ */
+
+/* ============================================
+   TIMELINE & RESOURCES CONTAINER
+   ============================================ */
+
+.timeline-resources-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .timeline-resources-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
+}
