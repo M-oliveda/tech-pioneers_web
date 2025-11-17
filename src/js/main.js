@@ -13,6 +13,7 @@ import Navigation from "./modules/navigation.js";
 import ThemeSwitcher from "./modules/theme-switcher.js";
 import Modal from "./modules/modal.js";
 import Carousel from "./modules/carousel.js";
+import AnimationController from "./modules/animations.js";
 
 /**
  * Initialize application
@@ -28,6 +29,10 @@ function init() {
   // Initialize modal
   const modal = new Modal();
   modal.init();
+
+  // Initialize scroll animations
+  const animationController = new AnimationController();
+  animationController.init();
 
   // Initialize carousels
   const featuredCarousel = document.querySelector('[data-carousel="featured"]');
