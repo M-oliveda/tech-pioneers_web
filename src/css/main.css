@@ -87,7 +87,7 @@
 @import "./utilities/scrollbar.css";
 
 /* Animations */
-/* @import "./utilities/animations.css"; */
+@import "./utilities/animations.css";
 
 /* Responsive Utilities */
 /* @import "./utilities/responsive.css"; */

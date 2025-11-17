@@ -1,0 +1,314 @@
+/**
+ * Animation Utilities
+ *
+ * CSS classes for scroll-triggered animations:
+ * - Base animation states (hidden/visible)
+ * - Fade in/out effects
+ * - Slide in/out effects (all directions)
+ * - Stagger animation support
+ * - Respects prefers-reduced-motion
+ */
+
+/* ============================================
+   ANIMATION VARIABLES
+   ============================================ */
+
+:root {
+  /* Animation durations */
+  --animation-duration-fast: 300ms;
+  --animation-duration-base: 500ms;
+  --animation-duration-slow: 800ms;
+
+  /* Animation easings */
+  --animation-easing-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --animation-easing-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Animation distances */
+  --animation-distance: 2rem;
+  --animation-distance-large: 4rem;
+}
+
+/* ============================================
+   BASE ANIMATION STATES
+   ============================================ */
+
+/**
+ * Hidden state - applied before element enters viewport
+ */
+.animate-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(var(--animation-distance));
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-smooth),
+    transform var(--animation-duration-base) var(--animation-easing-smooth),
+    visibility 0s linear var(--animation-duration-base);
+}
+
+/**
+ * Visible state - final state after animation completes
+ */
+.animate-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ============================================
+   FADE ANIMATIONS
+   ============================================ */
+
+/**
+ * Fade in animation
+ */
+.animate-fade-in {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-smooth),
+    transform var(--animation-duration-base) var(--animation-easing-smooth),
+    visibility 0s linear 0s;
+}
+
+/* ============================================
+   SLIDE ANIMATIONS
+   ============================================ */
+
+/**
+ * Slide up animation (from bottom)
+ */
+.animate-slide-up {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-ease-out),
+    transform var(--animation-duration-base) var(--animation-easing-ease-out),
+    visibility 0s linear 0s;
+}
+
+/**
+ * Slide down animation (from top)
+ */
+.animate-slide-down {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-ease-out),
+    transform var(--animation-duration-base) var(--animation-easing-ease-out),
+    visibility 0s linear 0s;
+}
+
+/* Override hidden state for slide down */
+.animate-hidden.animate-slide-down,
+.animate-hidden[data-animation-type="slideDown"] {
+  transform: translateY(calc(-1 * var(--animation-distance)));
+}
+
+/**
+ * Slide left animation (from right)
+ */
+.animate-slide-left {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-ease-out),
+    transform var(--animation-duration-base) var(--animation-easing-ease-out),
+    visibility 0s linear 0s;
+}
+
+/* Override hidden state for slide left */
+.animate-hidden.animate-slide-left,
+.animate-hidden[data-animation-type="slideLeft"] {
+  transform: translateX(var(--animation-distance));
+}
+
+/**
+ * Slide right animation (from left)
+ */
+.animate-slide-right {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-ease-out),
+    transform var(--animation-duration-base) var(--animation-easing-ease-out),
+    visibility 0s linear 0s;
+}
+
+/* Override hidden state for slide right */
+.animate-hidden.animate-slide-right,
+.animate-hidden[data-animation-type="slideRight"] {
+  transform: translateX(calc(-1 * var(--animation-distance)));
+}
+
+/* ============================================
+   STAGGER ANIMATIONS
+   ============================================ */
+
+/**
+ * Stagger animation base
+ */
+.animate-stagger {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity var(--animation-duration-base) var(--animation-easing-bounce),
+    transform var(--animation-duration-base) var(--animation-easing-bounce),
+    visibility 0s linear 0s;
+}
+
+/* Override hidden state for stagger */
+.animate-hidden.animate-stagger,
+.animate-hidden[data-animation-type="stagger"] {
+  transform: translateY(var(--animation-distance)) scale(0.95);
+}
+
+/* ============================================
+   SPECIAL ANIMATIONS FOR SPECIFIC COMPONENTS
+   ============================================ */
+
+/**
+ * Hero content animation (enhanced fade in)
+ */
+.hero__content.animate-fade-in {
+  transform: translateY(0) scale(1);
+  transition:
+    opacity var(--animation-duration-slow) var(--animation-easing-smooth),
+    transform var(--animation-duration-slow) var(--animation-easing-smooth),
+    visibility 0s linear 0s;
+}
+
+.hero__content.animate-hidden {
+  transform: translateY(var(--animation-distance-large)) scale(0.98);
+}
+
+/**
+ * Modal animations (immediate, no scroll trigger)
+ */
+.modal.animate-fade-in {
+  animation: modal-fade-in var(--animation-duration-fast)
+    var(--animation-easing-smooth) forwards;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/**
+ * Pioneer cards hover enhancement
+ */
+.pioneer-card {
+  transition:
+    transform var(--animation-duration-fast) var(--animation-easing-smooth),
+    box-shadow var(--animation-duration-fast) var(--animation-easing-smooth);
+}
+
+.pioneer-card:hover {
+  transform: translateY(-0.25rem);
+}
+
+/**
+ * Timeline items special slide-in from alternating sides
+ */
+.timeline__item:nth-child(odd).animate-slide-left {
+  transform: translateX(0);
+}
+
+.timeline__item:nth-child(odd).animate-hidden {
+  transform: translateX(calc(-1 * var(--animation-distance)));
+}
+
+.timeline__item:nth-child(even).animate-slide-left {
+  transform: translateX(0);
+}
+
+.timeline__item:nth-child(even).animate-hidden {
+  transform: translateX(var(--animation-distance));
+}
+
+/* ============================================
+   REDUCED MOTION PREFERENCE
+   ============================================ */
+
+/**
+ * Respect user's reduced motion preference
+ * Disable all animations if user prefers reduced motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Ensure elements are visible immediately */
+  .animate-hidden {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-visible {
+    transform: none;
+    transition: none;
+  }
+
+  /* Disable hover transforms */
+  .pioneer-card:hover {
+    transform: none;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/**
+ * Disable animations for specific elements
+ */
+.no-animate,
+.no-animate * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/**
+ * Force immediate visibility (development/testing)
+ */
+.force-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/**
+ * Screen reader only class for animation announcements
+ */
+.animate-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
