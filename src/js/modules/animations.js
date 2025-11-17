@@ -117,7 +117,7 @@ class AnimationController {
     } else {
       // Store animation type for later use
       element.dataset.animationType = animationType;
-      
+
       // Observe the element
       this.observer.observe(element);
     }
@@ -138,7 +138,10 @@ class AnimationController {
     }
 
     // Skip elements that contain clickable buttons
-    if (element.querySelector("button") || element.querySelector("[role='button']")) {
+    if (
+      element.querySelector("button") ||
+      element.querySelector("[role='button']")
+    ) {
       return true;
     }
 
@@ -161,7 +164,7 @@ class AnimationController {
    */
   setupStaggeredGroup(container) {
     const items = this.getStaggeredItems(container);
-    
+
     if (items.length === 0) {
       return;
     }
@@ -194,23 +197,23 @@ class AnimationController {
     if (element.classList.contains("hero__content")) {
       return "fadeIn";
     }
-    
+
     if (element.classList.contains("section__title")) {
       return "slideUp";
     }
-    
+
     if (element.classList.contains("pioneer-card")) {
       return "slideUp";
     }
-    
+
     if (element.classList.contains("timeline__item")) {
       return "slideLeft";
     }
-    
+
     if (element.classList.contains("resource-item")) {
       return "slideUp";
     }
-    
+
     if (element.classList.contains("modal")) {
       return "fadeIn";
     }
@@ -237,8 +240,8 @@ class AnimationController {
       ".resources__grid", // Resource items
     ];
 
-    return staggerSelectors.some((selector) => 
-      element.matches(selector) || element.querySelector(selector)
+    return staggerSelectors.some(
+      (selector) => element.matches(selector) || element.querySelector(selector)
     );
   }
 
@@ -250,16 +253,26 @@ class AnimationController {
   getStaggeredItems(container) {
     // Define selectors for staggered items based on container
     let itemSelector = "";
-    
-    if (container.classList.contains("carousel__track") || container.querySelector(".carousel__track")) {
+
+    if (
+      container.classList.contains("carousel__track") ||
+      container.querySelector(".carousel__track")
+    ) {
       itemSelector = ".pioneer-card";
-    } else if (container.classList.contains("timeline") || container.querySelector(".timeline")) {
+    } else if (
+      container.classList.contains("timeline") ||
+      container.querySelector(".timeline")
+    ) {
       itemSelector = ".timeline__item";
-    } else if (container.classList.contains("resources__grid") || container.querySelector(".resources__grid")) {
+    } else if (
+      container.classList.contains("resources__grid") ||
+      container.querySelector(".resources__grid")
+    ) {
       itemSelector = ".resource-item";
     } else {
       // Generic fallback
-      itemSelector = "[data-stagger-item], .pioneer-card, .timeline__item, .resource-item";
+      itemSelector =
+        "[data-stagger-item], .pioneer-card, .timeline__item, .resource-item";
     }
 
     return Array.from(container.querySelectorAll(itemSelector));
@@ -274,7 +287,7 @@ class AnimationController {
       if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
         this.animateElement(entry.target);
         this.animatedElements.add(entry.target);
-        
+
         // Stop observing animated elements to improve performance
         this.observer.unobserve(entry.target);
       }
@@ -303,9 +316,10 @@ class AnimationController {
   animateSingleElement(element, animationType) {
     // Remove hidden state
     element.classList.remove("animate-hidden");
-    
+
     // Add animation class
-    const animationClass = this.animationClasses[animationType] || this.animationClasses.fadeIn;
+    const animationClass =
+      this.animationClasses[animationType] || this.animationClasses.fadeIn;
     element.classList.add(animationClass);
 
     // Clean up after animation completes
@@ -321,7 +335,7 @@ class AnimationController {
    */
   animateStaggeredGroup(container) {
     const items = this.getStaggeredItems(container);
-    
+
     items.forEach((item, index) => {
       setTimeout(() => {
         if (!this.animatedElements.has(item)) {
@@ -348,17 +362,17 @@ class AnimationController {
       element.classList.remove("animate-hidden");
       element.classList.add("animate-visible");
     });
-    
+
     // Ensure all potentially animated elements are visible
     const animatableSelectors = [
       "[data-animate]",
       ".hero__content",
-      ".section__title", 
+      ".section__title",
       ".pioneer-card--featured",
       ".timeline__item",
       ".resource-item",
     ];
-    
+
     animatableSelectors.forEach((selector) => {
       const elements = document.querySelectorAll(selector);
       elements.forEach((element) => {
@@ -378,10 +392,10 @@ class AnimationController {
     }
 
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    
+
     const handleChange = (e) => {
       this.prefersReducedMotion = e.matches;
-      
+
       if (this.prefersReducedMotion) {
         // Disable animations and show all elements
         this.destroy();
@@ -412,10 +426,11 @@ class AnimationController {
       return;
     }
 
-    const animationClass = this.animationClasses[animationType] || this.animationClasses.fadeIn;
-    
+    const animationClass =
+      this.animationClasses[animationType] || this.animationClasses.fadeIn;
+
     element.classList.add(animationClass);
-    
+
     setTimeout(() => {
       element.classList.remove(animationClass);
     }, 1000);
@@ -429,7 +444,7 @@ class AnimationController {
       this.observer.disconnect();
       this.observer = null;
     }
-    
+
     this.animatedElements.clear();
   }
 }
