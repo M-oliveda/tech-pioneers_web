@@ -186,7 +186,9 @@ class Carousel {
    * Drag move handler
    */
   dragMove(e) {
-    if (!this.isDragging) return;
+    if (!this.isDragging) {
+      return;
+    }
 
     const currentPosition = this.getPositionX(e);
     const diff = currentPosition - this.startPos;
@@ -200,7 +202,9 @@ class Carousel {
    * Drag end handler
    */
   dragEnd() {
-    if (!this.isDragging) return;
+    if (!this.isDragging) {
+      return;
+    }
 
     this.isDragging = false;
     this.track.classList.remove("carousel__track--dragging");
@@ -293,22 +297,19 @@ class Carousel {
     // Get gap value (8px)
     const gap = 8;
 
-    // Get track padding (left + right)
+    // Batch all DOM reads first to prevent layout thrashing
     const trackStyle = window.getComputedStyle(this.track);
     const trackPaddingLeft = parseFloat(trackStyle.paddingLeft) || 0;
     const trackPaddingRight = parseFloat(trackStyle.paddingRight) || 0;
     const totalPadding = trackPaddingLeft + trackPaddingRight;
+    const viewportWidth = this.viewport.offsetWidth;
 
-    // Calculate available width (viewport minus padding)
-    const availableWidth = this.viewport.offsetWidth - totalPadding;
-
-    // Calculate slide width based on available width
+    // Then perform all calculations
+    const availableWidth = viewportWidth - totalPadding;
     const slideWidth = availableWidth / this.options.slidesToShow;
-
-    // Calculate offset accounting for gaps between slides
-    // Each slide movement needs to account for the gap
     const offset = -this.currentIndex * (slideWidth + gap);
 
+    // Finally, batch all DOM writes together
     if (!animate) {
       this.track.style.transition = "none";
     }
@@ -317,10 +318,11 @@ class Carousel {
     this.prevTranslate = offset;
     this.currentTranslate = offset;
 
+    // Use requestAnimationFrame to avoid forced reflow
     if (!animate) {
-      // Force reflow
-      this.track.offsetHeight;
-      this.track.style.transition = "";
+      requestAnimationFrame(() => {
+        this.track.style.transition = "";
+      });
     }
   }
 
@@ -362,7 +364,9 @@ class Carousel {
    * Start autoplay
    */
   startAutoplay() {
-    if (!this.options.autoplay) return;
+    if (!this.options.autoplay) {
+      return;
+    }
 
     this.stopAutoplay(); // Clear existing interval
     this.autoplayInterval = setInterval(() => {
