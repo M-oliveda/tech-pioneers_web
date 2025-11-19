@@ -8,6 +8,10 @@ export default defineConfig({
   build: {
     outDir: "../dist",
     emptyOutDir: true,
+    // Enable modern ES module output
+    modulePreload: {
+      polyfill: false,
+    },
     rollupOptions: {
       input: {
         main: resolve(__dirname, "src/index.html"),
@@ -26,34 +30,70 @@ export default defineConfig({
         },
         chunkFileNames: "assets/js/[name]-[hash].js",
         entryFileNames: "assets/js/[name]-[hash].js",
+        // Optimize manual chunks
+        manualChunks: (id) => {
+          // Separate vendor chunks for better caching
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+      // Tree-shaking and dead code elimination
+      treeshake: {
+        preset: "recommended",
+        moduleSideEffects: false,
       },
     },
-    // Performance optimization
+    // Performance optimization with aggressive minification
     minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
-        pure_funcs: ["console.log"],
-        passes: 2,
+        pure_funcs: ["console.log", "console.warn", "console.info"],
+        passes: 4,
+        unsafe: false,
+        unsafe_comps: false,
+        unsafe_math: false,
+        unsafe_methods: false,
+        toplevel: true,
+        keep_fargs: false,
+        pure_getters: true,
+        dead_code: true,
+        conditionals: true,
+        evaluate: true,
+        booleans: true,
+        loops: true,
+        unused: true,
+        hoist_funs: true,
+        hoist_vars: false,
+        if_return: true,
+        join_vars: true,
+        reduce_vars: true,
+        side_effects: true,
       },
       mangle: {
         safari10: true,
+        toplevel: true,
+        properties: false,
       },
       format: {
         comments: false,
+        ecma: 2020,
       },
     },
     // Generate source maps for debugging (false for production)
     sourcemap: false,
     // Chunk size warnings
-    chunkSizeWarningLimit: 1000,
-    // CSS code splitting
-    cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
+    // CSS code splitting disabled for better compression
+    cssCodeSplit: false,
     // Report compressed size
     reportCompressedSize: true,
     // Target modern browsers for smaller bundles
     target: "es2020",
+    // Inline small assets
+    assetsInlineLimit: 4096,
   },
   server: {
     port: 5173,
@@ -68,8 +108,13 @@ export default defineConfig({
     host: true,
     strictPort: true,
   },
-  // CSS configuration
+  // CSS configuration with aggressive minification
   css: {
     devSourcemap: true,
+    // PostCSS config is loaded from postcss.config.js
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: [],
   },
 });
