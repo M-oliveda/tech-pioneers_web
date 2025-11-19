@@ -17,6 +17,9 @@ export default [
         clearTimeout: "readonly",
         setInterval: "readonly",
         clearInterval: "readonly",
+        requestAnimationFrame: "readonly",
+        cancelAnimationFrame: "readonly",
+        IntersectionObserver: "readonly",
         // Node globals (for config files)
         process: "readonly",
         __dirname: "readonly",
@@ -26,7 +29,7 @@ export default [
     rules: {
       // Code quality
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-console": ["warn", { allow: ["warn", "error", "info"] }],
       "prefer-const": "error",
       "no-var": "error",
 
