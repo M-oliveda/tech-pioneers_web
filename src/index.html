@@ -7,14 +7,36 @@
       content="width=device-width, initial-scale=1.0"
     />
 
-    <!-- Preload Critical Assets -->
+    <!-- Resource Hints for Performance -->
+    <link
+      rel="dns-prefetch"
+      href="https://fonts.gstatic.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+
+    <!-- Preload Critical Assets for LCP -->
     <link
       rel="preload"
       as="image"
       href="/assets/images/hero_image.webp"
       type="image/webp"
       fetchpriority="high"
+      imagesrcset="/assets/images/hero_image.webp 1x"
+      imagesizes="100vw"
     />
+
+    <!-- Preload Critical CSS -->
+    <link
+      rel="preload"
+      href="/css/main.css"
+      as="style"
+    />
+
+    <!-- Preload Critical Fonts with display=swap -->
     <link
       rel="preload"
       href="/assets/fonts/figtree-variable.ttf"
@@ -24,8 +46,10 @@
     />
     <link
       rel="preload"
-      href="/css/main.css"
-      as="style"
+      href="/assets/fonts/roboto-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
     />
 
     <!-- Primary Meta Tags -->
@@ -335,7 +359,7 @@
                             class="pioneer-card__avatar-image"
                             width="223"
                             height="223"
-                            loading="lazy"
+                            loading="eager"
                           />
                         </picture>
                       </div>
@@ -366,7 +390,7 @@
                             class="pioneer-card__avatar-image"
                             width="223"
                             height="223"
-                            loading="lazy"
+                            loading="eager"
                           />
                         </picture>
                       </div>
@@ -398,7 +422,7 @@
                             class="pioneer-card__avatar-image"
                             width="223"
                             height="223"
-                            loading="lazy"
+                            loading="eager"
                           />
                         </picture>
                       </div>
@@ -430,7 +454,7 @@
                             class="pioneer-card__avatar-image"
                             width="223"
                             height="223"
-                            loading="lazy"
+                            loading="eager"
                           />
                         </picture>
                       </div>
@@ -1240,10 +1264,11 @@
       </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts - Load asynchronously for better performance -->
     <script
       type="module"
       src="/js/main.js"
+      defer
     ></script>
   </body>
 </html>
