@@ -1,0 +1,10 @@
+# Production Environment - Allow Crawling
+User-agent: *
+Allow: /
+
+# Crawl Delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://techpioneers.moliveda.dev/sitemap.xml
+
