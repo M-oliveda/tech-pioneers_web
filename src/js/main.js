@@ -14,11 +14,15 @@ import ThemeSwitcher from "./modules/theme-switcher.js";
 import Modal from "./modules/modal.js";
 import Carousel from "./modules/carousel.js";
 import AnimationController from "./modules/animations.js";
+import initWebPDetection from "./utils/webp-detection.js";
 
 /**
  * Initialize application
  */
-function init() {
+async function init() {
+  // Initialize WebP detection (runs first for optimal image loading)
+  await initWebPDetection();
+
   // Initialize theme switcher
   const themeSwitcher = new ThemeSwitcher();
   themeSwitcher.init();

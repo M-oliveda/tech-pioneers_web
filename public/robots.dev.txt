@@ -1,0 +1,7 @@
+# Development Environment - DO NOT CRAWL
+User-agent: *
+Disallow: /
+
+# This is a development/staging environment
+# Please visit our production site instead
+

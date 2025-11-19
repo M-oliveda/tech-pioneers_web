@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Staging environment - This sitemap should not be indexed -->
+    <url>
+        <loc>https://techpioneers-staging.moliveda.dev/</loc>
+        <lastmod>2025-11-18</lastmod>
+        <changefreq>always</changefreq>
+        <priority>0.1</priority>
+    </url>
+</urlset>
+

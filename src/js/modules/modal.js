@@ -15,6 +15,7 @@ class Modal {
     this.modal = this.modalBackdrop?.querySelector(".modal");
     this.closeButton = document.getElementById("modal-close");
     this.modalAvatar = document.getElementById("modal-avatar");
+    this.modalAvatarSource = document.getElementById("modal-avatar-source");
     this.modalTitle = document.getElementById("modal-title");
     this.modalSubtitle = document.getElementById("modal-subtitle");
     this.modalContent = document.getElementById("modal-content");
@@ -31,6 +32,7 @@ class Modal {
         name: "Katherine Johnson",
         role: "NASA Mathematician",
         image: "/assets/images/katherine_johnson.svg",
+        imageWebP: "/assets/images/katherine_johnson.webp",
         bio: "Katherine Johnson was an American mathematician whose calculations of orbital mechanics as a NASA employee were critical to the success of the first and subsequent U.S. crewed spaceflights. Her precise calculations were essential to the success of the Mercury and Apollo missions, including the historic Apollo 11 moon landing.",
         achievements: [
           "Calculated trajectories for Project Mercury and Apollo 11 moon landing",
@@ -45,6 +47,7 @@ class Modal {
         name: "Claude Shannon",
         role: "Mathematician & Electrical Engineer",
         image: "/assets/images/claude_shannon.svg",
+        imageWebP: "/assets/images/claude_shannon.webp",
         bio: "Claude Shannon was an American mathematician, electrical engineer, and cryptographer known as 'the father of information theory'. His master's thesis demonstrated that electrical applications of Boolean algebra could construct any logical numerical relationship, laying the foundation for digital circuit design.",
         achievements: [
           "Founded information theory and digital circuit design theory",
@@ -59,6 +62,7 @@ class Modal {
         name: "Radia Perlman",
         role: "Computer Scientist & Network Engineer",
         image: "/assets/images/radia_perlman.svg",
+        imageWebP: "/assets/images/radia_perlman.webp",
         bio: "Radia Perlman is an American computer scientist and network engineer, often called the 'Mother of the Internet'. She invented the Spanning Tree Protocol (STP), which is fundamental to the operation of network bridges and has made significant contributions to network design and standardization.",
         achievements: [
           "Invented the Spanning Tree Protocol (STP) for network stability",
@@ -73,6 +77,7 @@ class Modal {
         name: "Vint Cerf",
         role: "Computer Scientist & Internet Pioneer",
         image: "/assets/images/vint_cerf.svg",
+        imageWebP: "/assets/images/vint_cerf.webp",
         bio: "Vinton Gray Cerf is an American Internet pioneer and is recognized as one of 'the fathers of the Internet'. He co-designed the TCP/IP protocols and the architecture of the Internet with Robert Kahn. His contributions have been fundamental to the development and expansion of the Internet worldwide.",
         achievements: [
           "Co-designed TCP/IP protocols that power the Internet",
@@ -87,6 +92,7 @@ class Modal {
         name: "Shafi Goldwasser",
         role: "Computer Scientist & Cryptographer",
         image: "/assets/images/shafrira_goldwasser.svg",
+        imageWebP: "/assets/images/shafrira_goldwasser.webp",
         bio: "Shafi Goldwasser is an Israeli-American computer scientist and winner of the Turing Award in 2012. She is known for her pioneering work in cryptography and computational complexity theory, particularly in the areas of probabilistic encryption, zero-knowledge proofs, and complexity-based cryptography.",
         achievements: [
           "Received Turing Award (2012) for contributions to cryptography",
@@ -101,6 +107,7 @@ class Modal {
         name: "Donald Knuth",
         role: "Computer Scientist & Mathematician",
         image: "/assets/images/donald_knuth.svg",
+        imageWebP: "/assets/images/donald_knuth.webp",
         bio: "Donald Ervin Knuth is an American computer scientist and mathematician, often called the 'father of the analysis of algorithms'. He is best known as the author of the multi-volume work 'The Art of Computer Programming', one of the most respected references in computer science. He also created the TeX typesetting system.",
         achievements: [
           "Author of 'The Art of Computer Programming', the seminal work in computer science",
@@ -231,6 +238,10 @@ class Modal {
     if (this.modalAvatar) {
       this.modalAvatar.src = data.image;
       this.modalAvatar.alt = data.name;
+
+      if (this.modalAvatarSource && data.imageWebP) {
+        this.modalAvatarSource.srcset = data.imageWebP;
+      }
     }
 
     // Update title and subtitle

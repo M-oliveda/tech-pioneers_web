@@ -32,4 +32,4 @@ jobs:
         run: npm run build
 
       - name: Test Docker build
-        run: docker build -f Dockerfile.prod -t test-build .
+        run: docker build --target production -t test-build .

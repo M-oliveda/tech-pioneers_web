@@ -29,7 +29,7 @@
   border-radius: var(--radius-md);
 }
 
-/* Background Image */
+/* Background Image with WebP support */
 .hero::before {
   content: "";
   position: absolute;
@@ -37,11 +37,17 @@
   left: 0;
   right: 0;
   bottom: 0;
+  /* Fallback for browsers that don't support WebP */
   background-image: url("/assets/images/hero_image.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 1;
+}
+
+/* WebP support for modern browsers */
+.webp .hero::before {
+  background-image: url("/assets/images/hero_image.webp");
 }
 
 /* Dark overlay for better text readability */

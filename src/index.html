@@ -7,6 +7,27 @@
       content="width=device-width, initial-scale=1.0"
     />
 
+    <!-- Preload Critical Assets -->
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/images/hero_image.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/figtree-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/css/main.css"
+      as="style"
+    />
+
     <!-- Primary Meta Tags -->
     <title>TechPioneers - Celebrating Tech Innovators & Pioneers</title>
     <meta
@@ -120,6 +141,8 @@
           src="/assets/images/logo_light.svg"
           alt="TechPioneers Logo"
           class="header__logo-image"
+          width="145"
+          height="26"
         />
       </a>
       <!-- Desktop Navigation -->
@@ -175,12 +198,16 @@
             alt=""
             class="theme-switcher__icon theme-switcher__icon--sun"
             aria-hidden="true"
+            width="16"
+            height="16"
           />
           <img
             src="/assets/icons/moon.svg"
             alt=""
             class="theme-switcher__icon theme-switcher__icon--moon"
             aria-hidden="true"
+            width="16"
+            height="16"
           />
           <span class="theme-switcher__sr-only">Toggle theme</span>
         </button>
@@ -197,6 +224,8 @@
             alt=""
             class="header__menu-icon"
             aria-hidden="true"
+            width="16"
+            height="16"
           />
         </button>
       </div>
@@ -295,12 +324,20 @@
                   <div class="carousel__slide-content">
                     <article class="pioneer-card pioneer-card--featured">
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/ada_lovelace.svg"
-                          alt="Ada Lovelace"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/ada_lovelace.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/ada_lovelace.svg"
+                            alt="Ada Lovelace"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Ada Lovelace</h3>
@@ -318,12 +355,20 @@
                   <div class="carousel__slide-content">
                     <article class="pioneer-card pioneer-card--featured">
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/alan_turing.svg"
-                          alt="Alan Turing"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/alan_turing.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/alan_turing.svg"
+                            alt="Alan Turing"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Alan Turing</h3>
@@ -342,12 +387,20 @@
                   <div class="carousel__slide-content">
                     <article class="pioneer-card pioneer-card--featured">
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/grace_hopper.svg"
-                          alt="Grace Hopper"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/grace_hopper.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/grace_hopper.svg"
+                            alt="Grace Hopper"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Grace Hopper</h3>
@@ -366,12 +419,20 @@
                   <div class="carousel__slide-content">
                     <article class="pioneer-card pioneer-card--featured">
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/tim_berners_lee.svg"
-                          alt="Tim Berners-Lee"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/tim_berners_lee.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/tim_berners_lee.svg"
+                            alt="Tim Berners-Lee"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Tim Berners-Lee</h3>
@@ -398,6 +459,8 @@
                   alt=""
                   class="carousel__button-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
               </button>
               <button
@@ -410,6 +473,8 @@
                   alt=""
                   class="carousel__button-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
               </button>
             </div>
@@ -452,12 +517,20 @@
                         Learn more about Katherine Johnson
                       </button>
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/katherine_johnson.svg"
-                          alt="Katherine Johnson"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/katherine_johnson.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/katherine_johnson.svg"
+                            alt="Katherine Johnson"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Katherine Johnson</h3>
@@ -483,12 +556,20 @@
                         Learn more about Claude Shannon
                       </button>
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/claude_shannon.svg"
-                          alt="Claude Shannon"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/claude_shannon.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/claude_shannon.svg"
+                            alt="Claude Shannon"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Claude Shannon</h3>
@@ -514,12 +595,20 @@
                         Learn more about Radia Perlman
                       </button>
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/radia_perlman.svg"
-                          alt="Radia Perlman"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/radia_perlman.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/radia_perlman.svg"
+                            alt="Radia Perlman"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Radia Perlman</h3>
@@ -545,12 +634,20 @@
                         Learn more about Vint Cerf
                       </button>
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/vint_cerf.svg"
-                          alt="Vint Cerf"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/vint_cerf.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/vint_cerf.svg"
+                            alt="Vint Cerf"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Vint Cerf</h3>
@@ -576,12 +673,20 @@
                         Learn more about Shafrira Goldwasser
                       </button>
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/shafrira_goldwasser.svg"
-                          alt="Shafrira Goldwasser"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/shafrira_goldwasser.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/shafrira_goldwasser.svg"
+                            alt="Shafrira Goldwasser"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Shafrira Goldwasser</h3>
@@ -607,12 +712,20 @@
                         Learn more about Donald Knuth
                       </button>
                       <div class="pioneer-card__avatar">
-                        <img
-                          src="/assets/images/donald_knuth.svg"
-                          alt="Donald Knuth"
-                          class="pioneer-card__avatar-image"
-                          loading="lazy"
-                        />
+                        <picture>
+                          <source
+                            srcset="/assets/images/donald_knuth.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/donald_knuth.svg"
+                            alt="Donald Knuth"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
                       </div>
                       <div class="pioneer-card__content">
                         <h3 class="pioneer-card__title">Donald Knuth</h3>
@@ -640,6 +753,8 @@
                   alt=""
                   class="carousel__button-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
               </button>
               <button
@@ -652,6 +767,8 @@
                   alt=""
                   class="carousel__button-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
               </button>
             </div>
@@ -684,6 +801,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -703,6 +822,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">1945: ENIAC Unveiled</h3>
@@ -721,6 +842,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -741,6 +864,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -761,6 +886,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -781,6 +908,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -801,6 +930,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -821,6 +952,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -841,6 +974,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -861,6 +996,8 @@
                   alt=""
                   class="timeline__item-icon"
                   aria-hidden="true"
+                  width="16"
+                  height="16"
                 />
                 <div class="timeline__item-content">
                   <h3 class="timeline__item-title">
@@ -1053,12 +1190,20 @@
         <div class="modal__header">
           <div class="modal__header-content">
             <div class="modal__avatar">
-              <img
-                src="/assets/images/hero_image.png"
-                alt=""
-                class="modal__avatar-image"
-                id="modal-avatar"
-              />
+              <picture>
+                <source
+                  id="modal-avatar-source"
+                  type="image/webp"
+                />
+                <img
+                  src="/assets/images/hero_image.png"
+                  alt=""
+                  class="modal__avatar-image"
+                  id="modal-avatar"
+                  width="80"
+                  height="80"
+                />
+              </picture>
             </div>
             <div class="modal__title-wrapper">
               <h2

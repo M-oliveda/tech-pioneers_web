@@ -111,28 +111,34 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
 
 ### Docker Commands
 
-#### Local Development (Auto-loaded override)
+**Note:** Docker is used exclusively for **local development**. Cloud environments (Preview, Development, Staging, Production) are deployed directly to **Google Cloud Run** via GitHub Actions.
 
-| Command                        | Description                                |
-| ------------------------------ | ------------------------------------------ |
-| `docker compose up --build`    | Start development environment (foreground) |
-| `docker compose up -d`         | Start development environment (detached)   |
-| `docker compose logs -f`       | View live logs                             |
-| `docker compose down`          | Stop and remove containers                 |
-| `docker compose restart web`   | Restart a specific service                 |
-| `docker compose exec web bash` | Open shell inside container                |
+#### Local Development
 
-#### Staging Environment
+| Command                      | Description                                |
+| ---------------------------- | ------------------------------------------ |
+| `docker compose up --build`  | Start development environment (foreground) |
+| `docker compose up -d`       | Start development environment (detached)   |
+| `docker compose logs -f`     | View live logs                             |
+| `docker compose down`        | Stop and remove containers                 |
+| `docker compose restart web` | Restart the web service                    |
+| `docker compose exec web sh` | Open shell inside container                |
 
-| Command                                                                            | Description                       |
-| ---------------------------------------------------------------------------------- | --------------------------------- |
-| `docker compose -f docker-compose.yml -f docker-compose.staging.yml up --build -d` | Build and run staging environment |
+**Environment File:** Local development uses `.env.local` for environment variables
 
-#### Production Environment
+#### Building Production Image Locally (Testing Only)
 
-| Command                                                                         | Description                          |
-| ------------------------------------------------------------------------------- | ------------------------------------ |
-| `docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d` | Build and run production environment |
+To test the production build locally before deploying:
+
+```bash
+# Build production image
+docker build --target production -t techpioneers:prod .
+
+# Run production image locally
+docker run -p 8080:80 techpioneers:prod
+
+# Access at http://localhost:8080
+```
 
 ### Project Structure
 
@@ -141,8 +147,11 @@ techpioneers/
 ├── .github/
 │   └── workflows/
 │       ├── pr-test.yml              # PR validation workflow
-│       ├── deploy-staging.yml       # Auto-deploy to staging (develop branch)
-│       └── deploy-production.yml    # Auto-deploy to production (main branch)
+│       ├── deploy-preview.yml       # Auto-deploy to preview (PR environments)
+│       ├── cleanup-preview.yml      # Cleanup preview environments on PR close
+│       ├── deploy-development.yml   # Auto-deploy to development (develop branch)
+│       ├── deploy-staging.yml       # Auto-deploy to staging (release/* branches)
+│       └── deploy-production.yml    # Deploy to production (main + manual approval)
 ├── .husky/
 │   ├── pre-commit                   # Pre-commit hooks
 │   └── commit-msg                   # Commit message validation
@@ -194,12 +203,8 @@ techpioneers/
 ├── .gitignore                       # Git ignore patterns
 ├── .prettierrc.json                 # Prettier configuration
 ├── AGENTS.md                        # AI agent development guide
-├── docker-compose.yml               # Shared Docker configuration
-├── docker-compose.override.yml      # Local environment
-├── docker-compose.staging.yml       # Staging environment
-├── docker-compose.prod.yml          # Production environment
-├── Dockerfile.dev                   # Development Dockerfile
-├── Dockerfile.prod                  # Production Dockerfile (multi-stage)
+├── docker-compose.yml               # Local development configuration
+├── Dockerfile                       # Multi-stage Dockerfile (dev & prod targets)
 ├── nginx.conf                       # Nginx configuration for production
 ├── LICENSE                          # Project license
 ├── MASTERPLAN.md                    # Comprehensive project blueprint
@@ -328,52 +333,74 @@ Husky automatically runs the following checks before each commit:
 
 ### Environments
 
-| Environment | Branch    | Service Name         | URL                               | Auto-Deploy |
-| ----------- | --------- | -------------------- | --------------------------------- | ----------- |
-| Development | local     | N/A                  | localhost:5173                    | N/A         |
-| Staging     | `develop` | techpioneers-staging | techpioneers-staging-[id].run.app | ✅ Yes      |
-| Production  | `main`    | techpioneers-prod    | techpioneers-prod-[id].run.app    | ✅ Yes      |
+| **Environment** | **Branch Source**   | **Infrastructure**   | **URL**                               | **Auto-Deploy**    | **Purpose**                                                   |
+| --------------- | ------------------- | -------------------- | ------------------------------------- | ------------------ | ------------------------------------------------------------- |
+| **Local**       | Feature branches    | Docker (development) | localhost:5173                        | N/A                | Local development, testing, debugging                         |
+| **Preview**     | Pull Requests (PRs) | Google Cloud Run     | techpioneers-pr-{number}-[id].run.app | ✅ Yes (on PR)     | Test individual PRs in isolated, ephemeral environments       |
+| **Development** | `develop`           | Google Cloud Run     | techpioneers-development-[id].run.app | ✅ Yes             | Integrate features, run integration tests, catch issues early |
+| **Staging**     | `release/*`         | Google Cloud Run     | techpioneers-staging-[id].run.app     | ✅ Yes             | Final validation, UAT, QA, performance checks                 |
+| **Production**  | `main` + tags       | Google Cloud Run     | techpioneers-prod-[id].run.app        | ⚠️ Manual approval | Live system used by real users                                |
+
+**Key Points:**
+
+- **Local Development**: Uses Docker with hot-reloading for feature branches
+- **Preview (PRs)**: Ephemeral environments created for each PR, automatically cleaned up on close
+- **Development (develop branch)**: Integration environment for testing feature combinations
+- **Staging (release/\* branches)**: Production-like environment for final validation before release
+- **Production (main branch)**: Requires manual approval before deployment, tagged releases
 
 ### CI/CD Pipelines
 
-Three GitHub Actions workflows automate testing and deployment:
+Six GitHub Actions workflows automate testing and deployment:
 
 1. **`pr-test.yml`** - Validates pull requests to `develop` or `main` (lint, format, build, Docker build test)
-2. **`deploy-staging.yml`** - Auto-deploys `develop` branch to staging environment
-3. **`deploy-production.yml`** - Auto-deploys `main` branch to production with versioning and GitHub releases
+2. **`deploy-preview.yml`** - Creates ephemeral preview environments for each PR
+3. **`cleanup-preview.yml`** - Removes preview environments when PRs are closed
+4. **`deploy-development.yml`** - Auto-deploys `develop` branch to development environment
+5. **`deploy-staging.yml`** - Auto-deploys `release/*` branches to staging environment
+6. **`deploy-production.yml`** - Deploys `main` branch to production with manual approval, versioning, and GitHub releases
 
 ### Docker Image Tagging Strategy
 
-| Branch           | Docker Tags           | Cloud Run Service    | Description                 |
-| ---------------- | --------------------- | -------------------- | --------------------------- |
-| `develop`        | `latest`, `{git-sha}` | techpioneers-staging | Auto-deploy on every push   |
-| `main`           | `{version}`, `stable` | techpioneers-prod    | Stable releases with SemVer |
-| Feature branches | N/A                   | N/A                  | Local development only      |
+| **Environment** | **Branch Source** | **Build Target** | **Docker Tags**                                     | **Cloud Run Service**      | **Description**                           |
+| --------------- | ----------------- | ---------------- | --------------------------------------------------- | -------------------------- | ----------------------------------------- |
+| **Local**       | feature/\*        | `development`    | N/A (built locally)                                 | N/A                        | Local development only with hot-reloading |
+| **Preview**     | Pull Requests     | `production`     | `pr-{number}`                                       | `techpioneers-pr-{number}` | Ephemeral, cleaned up on PR close         |
+| **Development** | `develop`         | `production`     | `development`, `dev-{git-sha}`                      | `techpioneers-development` | Auto-deploy on every push to develop      |
+| **Staging**     | `release/*`       | `production`     | `staging`, `staging-{version}`, `staging-{git-sha}` | `techpioneers-staging`     | Auto-deploy on push to release branches   |
+| **Production**  | `main` + tags     | `production`     | `{version}`, `stable`, `production`                 | `techpioneers-prod`        | Manual approval + tagged releases         |
+
+**Build Targets:**
+
+- `development`: For local Docker development with hot-reloading and bind mounts
+- `production`: For all Cloud Run deployments (optimized multi-stage build with Nginx)
 
 **Version Format:**
 
-- Staging: `latest` (always latest from develop) + Git SHA for traceability
-- Production: `v1.0.0` (from package.json) + `stable` tag for rollback capability
+- Preview: `pr-{number}` (e.g., `pr-42`)
+- Development: `development` + `dev-{git-sha}` for traceability
+- Staging: `staging` + `staging-{version}` + `staging-{git-sha}`
+- Production: `v1.0.0` (from package.json or tag) + `stable` + `production` for rollback
 
-### Manual Deployment
+### Manual Deployment to Google Cloud Run
 
-For manual deployments or testing:
+For manual deployments or testing (typically automated via CI/CD):
 
 ```bash
 # Set variables
-export PROJECT_ID="your-project-id"
+export PROJECT_ID="your-gcp-project-id"
 export REGION="us-central1"
 export IMAGE_NAME="techpioneers"
 export VERSION="v1.0.0"
 
-# Build production image
-docker build -f Dockerfile.prod -t ${IMAGE_NAME}:${VERSION} .
+# Build production image with production target
+docker build --target production -t ${IMAGE_NAME}:${VERSION} .
 
-# Tag for Artifact Registry
+# Tag for Google Artifact Registry
 docker tag ${IMAGE_NAME}:${VERSION} \
   ${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION}
 
-# Configure Docker authentication
+# Configure Docker authentication for Artifact Registry
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
 
 # Push to Artifact Registry
@@ -409,6 +436,8 @@ gcloud run deploy techpioneers-prod \
   --concurrency=100 \
   --cpu-throttling
 ```
+
+**Note:** Manual deployments are rarely needed as CI/CD pipelines handle deployments automatically from `develop` and `main` branches.
 
 ## ♿ Accessibility
 

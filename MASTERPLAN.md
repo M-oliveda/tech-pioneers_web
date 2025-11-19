@@ -65,8 +65,11 @@ techpioneers/
 ├── .github/
 │   └── workflows/
 │       ├── pr-test.yml              # PR validation workflow
-│       ├── deploy-staging.yml       # Auto-deploy to staging (develop branch)
-│       └── deploy-production.yml    # Auto-deploy to production (main branch)
+│       ├── deploy-preview.yml       # Auto-deploy to preview (PR environments)
+│       ├── cleanup-preview.yml      # Cleanup preview environments on PR close
+│       ├── deploy-development.yml   # Auto-deploy to development (develop branch)
+│       ├── deploy-staging.yml       # Auto-deploy to staging (release/* branches)
+│       └── deploy-production.yml    # Deploy to production (main + manual approval)
 ├── .husky/
 │   ├── pre-commit                   # Pre-commit hooks
 │   └── commit-msg                   # Commit message validation
@@ -118,12 +121,8 @@ techpioneers/
 ├── .gitignore                       # Git ignore patterns
 ├── .prettierrc.json                 # Prettier configuration
 ├── AGENTS.md                        # AI agent development guide
-├── docker-compose.yml               # Shared Docker configuration
-├── docker-compose.override.yml      # Local environment
-├── docker-compose.staging.yml       # Staging environment
-├── docker-compose.prod.yml          # Production environment
-├── Dockerfile.dev                   # Development Dockerfile
-├── Dockerfile.prod                  # Production Dockerfile (multi-stage)
+├── docker-compose.yml               # Local development configuration
+├── Dockerfile                       # Multi-stage Dockerfile (dev & prod targets)
 ├── nginx.conf                       # Nginx configuration for production
 ├── LICENSE                          # Project license
 ├── MASTERPLAN.md                    # This file
@@ -578,88 +577,51 @@ docker-compose*.yml
 
 #### Docker Best Practices
 
-- **Use `docker-compose.yml`** as the **base configuration** shared by all environments (networks, shared volumes, common service names).
-- **Use `docker-compose.override.yml`** for **local development**. This file is automatically loaded and includes things like:
-  - **Bind mounts** for hot-reloading.
-  - **Environment variables** for local settings.
-  - **Exposed ports** for easy access.
-- **Use `docker-compose.staging.yml`** for the **staging/testing environment**. This file:
-  - Overrides the `build` context to use `Dockerfile.prod`.
-  - Specifies production-like **environment variables** (database URLs, external service keys).
-  - Exposes only necessary ports and doesn't include bind mounts.
-- **Use `docker-compose.prod.yml`** for the **production/live environment**. This file:
-  - Overrides the `build` context to use `Dockerfile.prod`.
-  - Specifies **live production environment variables** (production database URLs, final external service keys).
-  - Exposes only essential ports for the running application and **must not** include bind mounts or development tooling.
+- **Use `docker-compose.yml`** for **local development only**. This file:
+  - Uses the `.env.local` file for environment variables
+  - Includes **bind mounts** for hot-reloading
+  - Exposes ports for easy access (5173)
+  - Targets the `development` stage in the Dockerfile
+- **Cloud environments** (Preview, Development, Staging, Production) use **Google Cloud Run** directly
+  - No Docker Compose files needed for cloud deployments
+  - Docker images are built in GitHub Actions and pushed to Docker Hub
+  - Cloud Run pulls images from Docker Hub and deploys them
 
-#### `docker-compose.yml` (Base Configuration)
+#### `docker-compose.yml` (Local Development Only)
 
 ```yaml
+name: techpioneers_local
+
 services:
   web:
     build:
       context: .
-    container_name: web
+      dockerfile: Dockerfile
+      target: development
+    container_name: techpioneers_local_web
+    env_file:
+      - .env.local
+    ports:
+      - "5173:5173"
+    volumes:
+      # Source code volumes for hot-reloading
+      - ./src:/app/src
+      - ./public:/app/public
+      # Configuration files (read-only)
+      - ./vite.config.js:/app/vite.config.js:ro
+      - ./eslint.config.js:/app/eslint.config.js:ro
+      - ./.prettierrc.json:/app/.prettierrc.json:ro
     networks:
       - app-network
     restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
 
 networks:
   app-network:
     driver: bridge
-```
-
-#### `docker-compose.override.yml` (Local Development - Auto-loaded)
-
-```yaml
-name: techpioneers-local
-services:
-  web:
-    build:
-      dockerfile: Dockerfile.dev
-    env_file:
-      - .env
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./src:/app/src
-      - ./public:/app/public
-    environment:
-      - NODE_ENV=development
-```
-
-#### `docker-compose.staging.yml` (Staging Override)
-
-```yaml
-name: techpioneers-staging
-services:
-  web:
-    build:
-      dockerfile: Dockerfile.prod
-    container_name: web
-    env_file:
-      - .env.staging
-    ports:
-      - "8081:80"
-    environment:
-      - NODE_ENV=production
-```
-
-#### `docker-compose.prod.yml` (Production Override)
-
-```yaml
-name: techpioneers-prod
-services:
-  web:
-    build:
-      dockerfile: Dockerfile.prod
-    container_name: web
-    env_file:
-      - .env.production
-    ports:
-      - "80:80"
-    environment:
-      - NODE_ENV=production
 ```
 
 ### Environment Variables
@@ -680,11 +642,14 @@ PORT=5173
 
 ### Workflow Overview
 
-Three automated workflows handle different aspects of the CI/CD pipeline:
+Six automated workflows handle different aspects of the CI/CD pipeline:
 
 1. **PR Testing** - Quality checks on pull requests
-2. **Staging Deployment** - Auto-deploy `develop` branch to staging
-3. **Production Deployment** - Auto-deploy `main` branch to production
+2. **Preview Deployment** - Ephemeral environments for each PR
+3. **Preview Cleanup** - Remove PR environments when closed
+4. **Development Deployment** - Auto-deploy `develop` branch to development environment
+5. **Staging Deployment** - Auto-deploy `release/*` branches to staging
+6. **Production Deployment** - Manual approval + deploy `main` branch to production
 
 ### Workflow 1: PR Testing (`.github/workflows/pr-test.yml`)
 
@@ -729,11 +694,23 @@ jobs:
         run: docker build -f Dockerfile.prod -t test-build .
 ```
 
-### Workflow 2: Deploy Staging (`.github/workflows/deploy-staging.yml`)
+### Workflow 2: Deploy Preview (`.github/workflows/deploy-preview.yml`)
+
+**Trigger:** Pull request opened, synchronized, or reopened to `develop` or `main`
+
+**Purpose:** Create ephemeral preview environments for PR testing
+
+### Workflow 3: Cleanup Preview (`.github/workflows/cleanup-preview.yml`)
+
+**Trigger:** Pull request closed
+
+**Purpose:** Remove ephemeral preview environments
+
+### Workflow 4: Deploy Development (`.github/workflows/deploy-development.yml`)
 
 **Trigger:** Push to `develop` branch
 
-**Purpose:** Deploy latest changes to staging environment
+**Purpose:** Deploy latest changes to development environment for integration testing
 
 **Note:** Uses Docker Hub (free tier) instead of Artifact Registry to minimize costs.
 
@@ -810,13 +787,21 @@ jobs:
           echo "Staging deployed to: $SERVICE_URL"
 ```
 
+**Deployment URL:** `https://techpioneers-development-[random].run.app`
+
+### Workflow 5: Deploy Staging (`.github/workflows/deploy-staging.yml`)
+
+**Trigger:** Push to `release/*` branches
+
+**Purpose:** Deploy release candidates to staging for final validation and UAT
+
 **Deployment URL:** `https://techpioneers-staging-[random].run.app`
 
-### Workflow 3: Deploy Production (`.github/workflows/deploy-production.yml`)
+### Workflow 6: Deploy Production (`.github/workflows/deploy-production.yml`)
 
-**Trigger:** Push to `main` branch
+**Trigger:** Push to `main` branch, tags `v*`, or manual workflow dispatch
 
-**Purpose:** Deploy stable releases to production with versioning
+**Purpose:** Deploy stable releases to production with manual approval and versioning
 
 **Note:** Uses Docker Hub (free tier) instead of Artifact Registry to minimize costs.
 
@@ -928,18 +913,22 @@ jobs:
 
 **Deployment URL:** `https://techpioneers-prod-[random].run.app`
 
-### Docker Image Tagging Strategy
+### Environment & Docker Image Tagging Strategy
 
-| Branch           | Docker Tags           | Cloud Run Service    | Description                 |
-| ---------------- | --------------------- | -------------------- | --------------------------- |
-| `develop`        | `latest`, `{git-sha}` | techpioneers-staging | Auto-deploy on every push   |
-| `main`           | `{version}`, `stable` | techpioneers-prod    | Stable releases with SemVer |
-| Feature branches | N/A                   | N/A                  | Local development only      |
+| **Environment** | **Branch Source**   | **Docker Tags**                                     | **Cloud Run Service**      | **Deployment Trigger**             | **Purpose**                                                       | **Security Level** | **Data Type**                  | **Who Uses It**           |
+| --------------- | ------------------- | --------------------------------------------------- | -------------------------- | ---------------------------------- | ----------------------------------------------------------------- | ------------------ | ------------------------------ | ------------------------- |
+| **Local**       | Feature branches    | N/A (built locally)                                 | N/A                        | Manual run on developer machine    | Local development, testing, debugging                             | Low                | Mock / local                   | Developers                |
+| **Preview**     | Pull Requests (PRs) | `pr-{number}`                                       | `techpioneers-pr-{number}` | Auto-deploy on every PR            | Test individual PRs in isolated, ephemeral environments           | Medium             | Synthetic / fake               | Devs, QA, Product         |
+| **Development** | `develop`           | `development`, `dev-{git-sha}`                      | `techpioneers-development` | Auto-deploy on push to `develop`   | Integrate features, run integration tests, catch issues early     | Medium             | Synthetic / partial anonymized | Devs, QA                  |
+| **Staging**     | `release/*`         | `staging`, `staging-{version}`, `staging-{git-sha}` | `techpioneers-staging`     | Auto-deploy on push to `release/*` | Final validation, regression testing, UAT, QA, performance checks | High               | Sanitized production-like      | QA, Product, Stakeholders |
+| **Production**  | `main` + tags       | `{version}`, `stable`, `production`                 | `techpioneers-prod`        | Manual approval for deploy + tag   | Live system used by real users                                    | Very High          | Real data                      | End-users, Ops            |
 
 **Version Format:**
 
-- Staging: `latest` (always latest from develop) + Git SHA for traceability
-- Production: `v1.0.0` (from package.json) + `stable` tag for rollback capability
+- Preview: `pr-{number}` (e.g., `pr-42`) - Ephemeral, cleaned up on PR close
+- Development: `development` (always latest from develop) + `dev-{git-sha}` for traceability
+- Staging: `staging` (always latest from release branch) + `staging-{version}` + `staging-{git-sha}`
+- Production: `v1.0.0` (from package.json or tag) + `stable` + `production` tags for rollback capability
 
 ## Git Workflow (GitFlow + SemVer)
 
@@ -1175,6 +1164,41 @@ _This command explicitly uses the base config and the production override to bui
 
 > **Note:** This configuration is optimized for **Google Cloud Free Tier** deployment.
 
+**Preview Service (techpioneers-pr-{number}):**
+
+```bash
+Service Name: techpioneers-pr-{number} (ephemeral)
+Region: us-central1
+CPU: 1 (CPU allocated only during request processing)
+Memory: 256Mi
+Min Instances: 0 (scales to zero - FREE)
+Max Instances: 1
+Concurrency: 80
+Timeout: 60s
+Port: 80
+Ingress: All
+Authentication: Allow unauthenticated
+CPU Allocation: CPU is only allocated during request processing
+Lifecycle: Deleted when PR is closed
+```
+
+**Development Service (techpioneers-development):**
+
+```bash
+Service Name: techpioneers-development
+Region: us-central1
+CPU: 1 (CPU allocated only during request processing)
+Memory: 256Mi
+Min Instances: 0 (scales to zero - FREE)
+Max Instances: 2
+Concurrency: 100
+Timeout: 60s
+Port: 80
+Ingress: All
+Authentication: Allow unauthenticated
+CPU Allocation: CPU is only allocated during request processing
+```
+
 **Staging Service (techpioneers-staging):**
 
 ```bash
@@ -1221,11 +1245,13 @@ CPU Allocation: CPU is only allocated during request processing
 
 #### Environment-Specific Deployments
 
-| Environment | Branch    | Service Name         | URL                               | Auto-Deploy |
-| ----------- | --------- | -------------------- | --------------------------------- | ----------- |
-| Development | local     | N/A                  | localhost:5173                    | N/A         |
-| Staging     | `develop` | techpioneers-staging | techpioneers-staging-[id].run.app | Yes         |
-| Production  | `main`    | techpioneers-prod    | techpioneers-prod-[id].run.app    | Yes         |
+| Environment | Branch        | Service Name             | URL                                   | Auto-Deploy     |
+| ----------- | ------------- | ------------------------ | ------------------------------------- | --------------- |
+| Local       | feature/\*    | N/A                      | localhost:5173                        | N/A             |
+| Preview     | PR            | techpioneers-pr-{number} | techpioneers-pr-{number}-[id].run.app | Yes (on PR)     |
+| Development | `develop`     | techpioneers-development | techpioneers-development-[id].run.app | Yes             |
+| Staging     | `release/*`   | techpioneers-staging     | techpioneers-staging-[id].run.app     | Yes             |
+| Production  | `main` + tags | techpioneers-prod        | techpioneers-prod-[id].run.app        | Manual approval |
 
 ### Google Cloud Setup Prerequisites
 
@@ -1586,13 +1612,22 @@ If you need even more cost savings, consider these alternatives:
 - [x] Implement mobile navigation
 - [x] Add hover effects and transitions
 
-### Phase 5: Content Integration (Week 5)
+### Phase 5: Content Integration & Environment Setup (Week 5-6)
 
-- [ ] Add pioneer data (4 featured + 6 more)
-- [ ] Insert timeline historical content
-- [ ] Add resources content
-- [ ] Optimize and compress images
-- [ ] Test all interactive elements
+- [x] Add pioneer data (4 featured + 6 more)
+- [x] Insert timeline historical content
+- [x] Add resources content
+- [x] Optimize and compress images
+- [x] Test all interactive elements
+- [x] Implement 5-environment deployment strategy
+- [x] Update docker-compose.yml to use .env.local
+- [x] Create GitHub workflow for Preview environment (PR deployments)
+- [x] Create GitHub workflow cleanup for Preview environments
+- [x] Rename and update Development environment workflow (develop branch)
+- [x] Create GitHub workflow for Staging environment (release/\* branches)
+- [x] Update Production workflow with manual approval requirement
+- [x] Update MASTERPLAN.md with new environment structure
+- [x] Update README.md with comprehensive environment documentation
 
 ### Phase 6: Testing & Optimization (Week 6)
 

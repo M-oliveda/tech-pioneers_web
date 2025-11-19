@@ -12,6 +12,21 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "src/index.html"),
       },
+      output: {
+        // Asset file naming for better caching
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split(".");
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp/i.test(ext)) {
+            return "assets/images/[name]-[hash][extname]";
+          } else if (/woff|woff2|ttf|eot/i.test(ext)) {
+            return "assets/fonts/[name]-[hash][extname]";
+          }
+          return "assets/[name]-[hash][extname]";
+        },
+        chunkFileNames: "assets/js/[name]-[hash].js",
+        entryFileNames: "assets/js/[name]-[hash].js",
+      },
     },
     // Performance optimization
     minify: "terser",
@@ -19,12 +34,26 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ["console.log"],
+        passes: 2,
+      },
+      mangle: {
+        safari10: true,
+      },
+      format: {
+        comments: false,
       },
     },
-    // Generate source maps for debugging
+    // Generate source maps for debugging (false for production)
     sourcemap: false,
     // Chunk size warnings
     chunkSizeWarningLimit: 1000,
+    // CSS code splitting
+    cssCodeSplit: true,
+    // Report compressed size
+    reportCompressedSize: true,
+    // Target modern browsers for smaller bundles
+    target: "es2020",
   },
   server: {
     port: 5173,
