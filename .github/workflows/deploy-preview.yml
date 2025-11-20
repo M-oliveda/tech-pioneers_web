@@ -39,7 +39,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --target production \
+          docker build --target protected \
+            --build-arg AUTH_USERNAME=${{ secrets.PREVIEW_AUTH_USERNAME }} \
+            --build-arg AUTH_PASSWORD=${{ secrets.PREVIEW_AUTH_PASSWORD }} \
             -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }} \
             .
 
@@ -113,6 +115,8 @@ jobs:
             </table>
 
             ---
+
+            **🔒 Remember to use have the username and password for authentication**
 
             **📋 Environment Details:**
             - **Purpose:** Test individual PRs in isolated environments

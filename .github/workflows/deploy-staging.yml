@@ -37,7 +37,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --target production \
+          docker build --target protected \
+            --build-arg AUTH_USERNAME=${{ secrets.STAGING_AUTH_USERNAME }} \
+            --build-arg AUTH_PASSWORD=${{ secrets.STAGING_AUTH_PASSWORD }} \
             -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging \
             -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ steps.release-version.outputs.version }} \
             -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ github.sha }} \
@@ -101,3 +103,7 @@ jobs:
           echo "**Data Type:** Sanitized production-like" >> $GITHUB_STEP_SUMMARY
           echo "**Security Level:** High" >> $GITHUB_STEP_SUMMARY
           echo "**Who Uses It:** QA, Product, Stakeholders" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔒 Authentication Required" >> $GITHUB_STEP_SUMMARY
+          echo "Remember to use have the username and password for authentication"
