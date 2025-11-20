@@ -28,7 +28,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --target production \
+          docker build --target protected \
+            --build-arg AUTH_USERNAME=${{ secrets.DEV_AUTH_USERNAME }} \
+            --build-arg AUTH_PASSWORD=${{ secrets.DEV_AUTH_PASSWORD }} \
             -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:development \
             -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:dev-${{ github.sha }} \
             .
@@ -71,3 +73,4 @@ jobs:
           echo "Development environment deployed to: $SERVICE_URL"
           echo "Purpose: Integrate features, run integration tests, catch issues early"
           echo "Data Type: Synthetic / Partial anonymized"
+          echo "🔒 Remember to use have the username and password for authentication"

@@ -58,14 +58,43 @@ RUN npm run build
 # ==============================================================================
 FROM nginx:alpine AS production
 
-# Install wget for health checks
-RUN apk add --no-cache wget
+# Install wget for health checks and apache2-utils for htpasswd
+RUN apk add --no-cache wget apache2-utils
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy production nginx configuration
+# Copy production nginx configuration (public - no authentication)
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose HTTP port (Cloud Run uses PORT env var, defaults to 80)
+EXPOSE 80
+
+# Health check for Cloud Run and container orchestration
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:80/health || exit 1
+
+# Start nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
+
+# ==============================================================================
+# Stage 5: Protected - Production runtime with HTTP Basic Authentication
+# ==============================================================================
+FROM nginx:alpine AS protected
+
+# Install wget for health checks and apache2-utils for htpasswd
+RUN apk add --no-cache wget apache2-utils
+
+# Copy built assets from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy protected nginx configuration (with authentication)
+COPY nginx.protected.conf /etc/nginx/nginx.conf
+
+# Create .htpasswd file with default credentials (will be overridden by build args)
+ARG AUTH_USERNAME=techpioneers
+ARG AUTH_PASSWORD=changeMe2024!
+RUN htpasswd -cb /etc/nginx/.htpasswd ${AUTH_USERNAME} ${AUTH_PASSWORD}
 
 # Expose HTTP port (Cloud Run uses PORT env var, defaults to 80)
 EXPOSE 80

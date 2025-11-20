@@ -333,13 +333,26 @@ Husky automatically runs the following checks before each commit:
 
 ### Environments
 
-| **Environment** | **Branch Source**   | **Infrastructure**   | **URL**                               | **Auto-Deploy**    | **Purpose**                                                   |
-| --------------- | ------------------- | -------------------- | ------------------------------------- | ------------------ | ------------------------------------------------------------- |
-| **Local**       | Feature branches    | Docker (development) | localhost:5173                        | N/A                | Local development, testing, debugging                         |
-| **Preview**     | Pull Requests (PRs) | Google Cloud Run     | techpioneers-pr-{number}-[id].run.app | ✅ Yes (on PR)     | Test individual PRs in isolated, ephemeral environments       |
-| **Development** | `develop`           | Google Cloud Run     | techpioneers-development-[id].run.app | ✅ Yes             | Integrate features, run integration tests, catch issues early |
-| **Staging**     | `release/*`         | Google Cloud Run     | techpioneers-staging-[id].run.app     | ✅ Yes             | Final validation, UAT, QA, performance checks                 |
-| **Production**  | `main` + tags       | Google Cloud Run     | techpioneers-prod-[id].run.app        | ⚠️ Manual approval | Live system used by real users                                |
+| **Environment** | **Branch Source**   | **Infrastructure**   | **URL**                               | **Auto-Deploy**    | **Access**  | **Purpose**                                                   |
+| --------------- | ------------------- | -------------------- | ------------------------------------- | ------------------ | ----------- | ------------------------------------------------------------- |
+| **Local**       | Feature branches    | Docker (development) | localhost:5173                        | N/A                | Public      | Local development, testing, debugging                         |
+| **Preview**     | Pull Requests (PRs) | Google Cloud Run     | techpioneers-pr-{number}-[id].run.app | ✅ Yes (on PR)     | 🔒 Password | Test individual PRs in isolated, ephemeral environments       |
+| **Development** | `develop`           | Google Cloud Run     | techpioneers-development-[id].run.app | ✅ Yes             | 🔒 Password | Integrate features, run integration tests, catch issues early |
+| **Staging**     | `release/*`         | Google Cloud Run     | techpioneers-staging-[id].run.app     | ✅ Yes             | 🔒 Password | Final validation, UAT, QA, performance checks                 |
+| **Production**  | `main` + tags       | Google Cloud Run     | techpioneers-prod-[id].run.app        | ⚠️ Manual approval | ✅ Public   | Live system used by real users                                |
+
+### Environment Authentication
+
+All non-production environments (Preview, Development, Staging) are protected with **HTTP Basic Authentication** to prevent unauthorized access. Production is publicly accessible.
+
+**For detailed setup instructions**, see [.github/AUTHENTICATION_SETUP.md](./.github/AUTHENTICATION_SETUP.md)
+
+**Quick Overview:**
+
+- **Protected Environments**: Development, Staging, Preview (require username/password)
+- **Public Environment**: Production (no authentication required)
+- **Authentication Method**: HTTP Basic Authentication via Nginx
+- **Credentials**: Configured via GitHub Secrets per environment
 
 **Key Points:**
 
@@ -524,6 +537,7 @@ This project is licensed under the **Apache License** - see the [LICENSE](./LICE
 
 - [MASTERPLAN.md](./MASTERPLAN.md) - Comprehensive project blueprint
 - [AGENTS.md](./AGENTS.md) - AI agent development guide
+- [.github/AUTHENTICATION_SETUP.md](./.github/AUTHENTICATION_SETUP.md) - Environment authentication guide
 
 ---
 
