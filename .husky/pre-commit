@@ -1,0 +1,5 @@
+# Run linting
+npm run lint
+
+# Run format check
+npm run format:check

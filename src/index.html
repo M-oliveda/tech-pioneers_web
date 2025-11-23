@@ -1,0 +1,1274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <!-- Resource Hints for Performance -->
+    <link
+      rel="dns-prefetch"
+      href="https://fonts.gstatic.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+
+    <!-- Preload Critical Assets for LCP -->
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/images/hero_image.webp"
+      type="image/webp"
+      fetchpriority="high"
+      imagesrcset="/assets/images/hero_image.webp 1x"
+      imagesizes="100vw"
+    />
+
+    <!-- Preload Critical CSS -->
+    <link
+      rel="preload"
+      href="/css/main.css"
+      as="style"
+    />
+
+    <!-- Preload Critical Fonts with display=swap -->
+    <link
+      rel="preload"
+      href="/assets/fonts/figtree-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/roboto-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+
+    <!-- Primary Meta Tags -->
+    <title>TechPioneers - Celebrating Tech Innovators & Pioneers</title>
+    <meta
+      name="title"
+      content="TechPioneers - Celebrating Tech Innovators & Pioneers"
+    />
+    <meta
+      name="description"
+      content="Discover the remarkable stories of tech pioneers, developers, researchers, and innovators who shaped modern technology. Explore their contributions, achievements, and lasting impact on the digital world."
+    />
+    <meta
+      name="keywords"
+      content="tech pioneers, technology innovators, software developers, computer science, programming history, tech leaders, innovation, technology pioneers, famous programmers"
+    />
+    <meta
+      name="author"
+      content="Mauricio Oliveda"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta
+      property="og:type"
+      content="website"
+    />
+    <meta
+      property="og:url"
+      content="https://techpioneers.dev/"
+    />
+    <meta
+      property="og:title"
+      content="TechPioneers - Celebrating Tech Innovators & Pioneers"
+    />
+    <meta
+      property="og:description"
+      content="Discover the remarkable stories of tech pioneers, developers, researchers, and innovators who shaped modern technology. Explore their contributions, achievements, and lasting impact on the digital world."
+    />
+    <meta
+      property="og:image"
+      content="/assets/images/logo_light.svg"
+    />
+
+    <!-- Twitter -->
+    <meta
+      property="twitter:card"
+      content="summary_large_image"
+    />
+    <meta
+      property="twitter:url"
+      content="https://techpioneers.dev/"
+    />
+    <meta
+      property="twitter:title"
+      content="TechPioneers - Celebrating Tech Innovators & Pioneers"
+    />
+    <meta
+      property="twitter:description"
+      content="Discover the remarkable stories of tech pioneers, developers, researchers, and innovators who shaped modern technology. Explore their contributions, achievements, and lasting impact on the digital world."
+    />
+    <meta
+      property="twitter:image"
+      content="/assets/images/logo_light.svg"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/assets/images/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/images/icon.svg"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/images/icon_dark.svg"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="/assets/images/apple_icon.png"
+    />
+
+    <!-- Stylesheet -->
+    <link
+      rel="stylesheet"
+      href="/css/main.css"
+    />
+  </head>
+  <body>
+    <!-- Skip to main content link (Accessibility) -->
+    <a
+      href="#main-content"
+      class="header__skip-link"
+    >
+      Skip to main content
+    </a>
+
+    <!-- Header -->
+    <header class="header">
+      <!-- Logo -->
+      <a
+        href="/"
+        class="header__logo"
+        aria-label="TechPioneers Home"
+      >
+        <img
+          src="/assets/images/logo_light.svg"
+          alt="TechPioneers Logo"
+          class="header__logo-image"
+          width="145"
+          height="26"
+        />
+      </a>
+      <!-- Desktop Navigation -->
+      <nav
+        class="header__nav"
+        aria-label="Main navigation"
+      >
+        <ul class="header__nav-list">
+          <li class="header__nav-item">
+            <a
+              href="#featured"
+              class="header__nav-link header__nav-link--active"
+            >
+              Featured
+            </a>
+          </li>
+          <li class="header__nav-item">
+            <a
+              href="#pioneers"
+              class="header__nav-link"
+            >
+              Pioneers
+            </a>
+          </li>
+          <li class="header__nav-item">
+            <a
+              href="#timeline"
+              class="header__nav-link"
+            >
+              Timeline
+            </a>
+          </li>
+          <li class="header__nav-item">
+            <a
+              href="#resources"
+              class="header__nav-link"
+            >
+              Resources
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- Mobile/Desktop Controls -->
+      <div class="header__controls">
+        <!-- Theme Switcher -->
+        <button
+          class="theme-switcher"
+          aria-label="Toggle theme"
+          type="button"
+        >
+          <img
+            src="/assets/icons/sun.svg"
+            alt=""
+            class="theme-switcher__icon theme-switcher__icon--sun"
+            aria-hidden="true"
+            width="16"
+            height="16"
+          />
+          <img
+            src="/assets/icons/moon.svg"
+            alt=""
+            class="theme-switcher__icon theme-switcher__icon--moon"
+            aria-hidden="true"
+            width="16"
+            height="16"
+          />
+          <span class="theme-switcher__sr-only">Toggle theme</span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          class="header__menu-toggle"
+          aria-label="Toggle mobile menu"
+          aria-expanded="false"
+          type="button"
+        >
+          <img
+            src="/assets/icons/menu.svg"
+            alt=""
+            class="header__menu-icon"
+            aria-hidden="true"
+            width="16"
+            height="16"
+          />
+        </button>
+      </div>
+      <!-- Mobile Navigation Overlay -->
+      <nav
+        class="header__mobile-nav"
+        aria-label="Mobile navigation"
+      >
+        <ul class="header__mobile-nav-list">
+          <li class="header__mobile-nav-item">
+            <a
+              href="#featured"
+              class="header__mobile-nav-link header__mobile-nav-link--active"
+            >
+              Featured
+            </a>
+          </li>
+          <li class="header__mobile-nav-item">
+            <a
+              href="#pioneers"
+              class="header__mobile-nav-link"
+            >
+              Pioneers
+            </a>
+          </li>
+          <li class="header__mobile-nav-item">
+            <a
+              href="#timeline"
+              class="header__mobile-nav-link"
+            >
+              Timeline
+            </a>
+          </li>
+          <li class="header__mobile-nav-item">
+            <a
+              href="#resources"
+              class="header__mobile-nav-link"
+            >
+              Resources
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero__container">
+          <div class="hero__content">
+            <h1 class="hero__title">
+              Celebrating the Visionaries of Computing
+            </h1>
+            <p class="hero__description">
+              Explore the lives and legacies of the individuals who shaped the
+              digital world. From groundbreaking inventions to revolutionary
+              ideas, discover the stories of the pioneers who paved the way for
+              modern technology.
+            </p>
+            <a
+              href="#featured"
+              class="hero__cta"
+            >
+              Explore More
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Pioneers Section -->
+      <section
+        id="featured"
+        class="featured-pioneers"
+        aria-labelledby="featured-heading"
+      >
+        <div class="featured-pioneers__container">
+          <h2
+            id="featured-heading"
+            class="featured-pioneers__title"
+          >
+            Featured Pioneers
+          </h2>
+
+          <!-- Featured Pioneers Carousel -->
+          <div
+            class="carousel carousel--featured"
+            data-carousel="featured"
+            role="region"
+            aria-label="Featured pioneers carousel"
+          >
+            <div class="carousel__viewport">
+              <div class="carousel__track">
+                <!-- Featured Pioneer Card 1 - Ada Lovelace -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--featured">
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/ada_lovelace.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/ada_lovelace.svg"
+                            alt="Ada Lovelace"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="eager"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Ada Lovelace</h3>
+                        <p class="pioneer-card__description">
+                          The first computer programmer, Ada Lovelace envisioned
+                          the potential of computers beyond mere calculation.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Featured Pioneer Card 2 -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--featured">
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/alan_turing.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/alan_turing.svg"
+                            alt="Alan Turing"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="eager"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Alan Turing</h3>
+                        <p class="pioneer-card__description">
+                          A brilliant mathematician and codebreaker, Alan Turing
+                          laid the theoretical foundations for modern computing
+                          and artificial intelligence.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Featured Pioneer Card 3 -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--featured">
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/grace_hopper.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/grace_hopper.svg"
+                            alt="Grace Hopper"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="eager"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Grace Hopper</h3>
+                        <p class="pioneer-card__description">
+                          A pioneer of computer science, Grace Hopper developed
+                          the first compiler and popularized the term
+                          'debugging'.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Featured Pioneer Card 4 -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--featured">
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/tim_berners_lee.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/tim_berners_lee.svg"
+                            alt="Tim Berners-Lee"
+                            class="pioneer-card__avatar-image"
+                            width="223"
+                            height="223"
+                            loading="eager"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Tim Berners-Lee</h3>
+                        <p class="pioneer-card__description">
+                          The inventor of the World Wide Web, Tim Berners-Lee
+                          revolutionized information sharing and communication.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <div class="carousel__controls">
+              <button
+                class="carousel__button carousel__button--prev"
+                aria-label="Previous slide"
+                type="button"
+              >
+                <img
+                  src="/assets/icons/chevron_left.svg"
+                  alt=""
+                  class="carousel__button-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+              </button>
+              <button
+                class="carousel__button carousel__button--next"
+                aria-label="Next slide"
+                type="button"
+              >
+                <img
+                  src="/assets/icons/chevron_right.svg"
+                  alt=""
+                  class="carousel__button-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- More Pioneers Section -->
+      <section
+        id="pioneers"
+        class="more-pioneers"
+        aria-labelledby="pioneers-heading"
+      >
+        <div class="more-pioneers__container">
+          <h2
+            id="pioneers-heading"
+            class="more-pioneers__title"
+          >
+            More Pioneers
+          </h2>
+
+          <!-- More Pioneers Carousel -->
+          <div
+            class="carousel carousel--more-pioneers"
+            data-carousel="more-pioneers"
+            role="region"
+            aria-label="More pioneers carousel"
+          >
+            <div class="carousel__viewport">
+              <div class="carousel__track">
+                <!-- Clickable Pioneer Card 1 - Katherine Johnson -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--clickable">
+                      <button
+                        class="pioneer-card__button"
+                        aria-label="Learn more about Katherine Johnson"
+                        data-pioneer-id="katherine-johnson"
+                      >
+                        Learn more about Katherine Johnson
+                      </button>
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/katherine_johnson.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/katherine_johnson.svg"
+                            alt="Katherine Johnson"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Katherine Johnson</h3>
+                        <p class="pioneer-card__description">
+                          NASA mathematician and 'human computer' whose
+                          calculations were critical to the success of the first
+                          US manned spaceflights.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Clickable Pioneer Card 2 - Claude Shannon -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--clickable">
+                      <button
+                        class="pioneer-card__button"
+                        aria-label="Learn more about Claude Shannon"
+                        data-pioneer-id="claude-shannon"
+                      >
+                        Learn more about Claude Shannon
+                      </button>
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/claude_shannon.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/claude_shannon.svg"
+                            alt="Claude Shannon"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Claude Shannon</h3>
+                        <p class="pioneer-card__description">
+                          The 'father of information theory', Claude Shannon
+                          laid the groundwork for digital circuits and
+                          information processing.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Clickable Pioneer Card 3 - Margaret Hamilton -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--clickable">
+                      <button
+                        class="pioneer-card__button"
+                        aria-label="Learn more about Radia Perlman"
+                        data-pioneer-id="radia-perlman"
+                      >
+                        Learn more about Radia Perlman
+                      </button>
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/radia_perlman.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/radia_perlman.svg"
+                            alt="Radia Perlman"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Radia Perlman</h3>
+                        <p class="pioneer-card__description">
+                          Known as the 'Mother of the Internet', Radia Perlman
+                          invented the Spanning Tree Protocol, essential for
+                          network stability.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Clickable Pioneer Card 4 - Vint Cerf -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--clickable">
+                      <button
+                        class="pioneer-card__button"
+                        aria-label="Learn more about Vint Cerf"
+                        data-pioneer-id="vint-cerf"
+                      >
+                        Learn more about Vint Cerf
+                      </button>
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/vint_cerf.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/vint_cerf.svg"
+                            alt="Vint Cerf"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Vint Cerf</h3>
+                        <p class="pioneer-card__description">
+                          One of the 'fathers of the Internet', Vint Cerf
+                          co-developed the TCP/IP protocols that underpin the
+                          modern internet.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Clickable Pioneer Card 5 - Shafrira Goldwasser -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--clickable">
+                      <button
+                        class="pioneer-card__button"
+                        aria-label="Learn more about Shafrira Goldwasser"
+                        data-pioneer-id="shafrira-goldwasser"
+                      >
+                        Learn more about Shafrira Goldwasser
+                      </button>
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/shafrira_goldwasser.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/shafrira_goldwasser.svg"
+                            alt="Shafrira Goldwasser"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Shafrira Goldwasser</h3>
+                        <p class="pioneer-card__description">
+                          A renowned cryptographer and computer scientist,
+                          Shafrira Goldwasser is a pioneer in probabilistic
+                          proof systems and cryptography.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Clickable Pioneer Card 6 - Donald Knuth -->
+                <div class="carousel__slide">
+                  <div class="carousel__slide-content">
+                    <article class="pioneer-card pioneer-card--clickable">
+                      <button
+                        class="pioneer-card__button"
+                        aria-label="Learn more about Donald Knuth"
+                        data-pioneer-id="donald-knuth"
+                      >
+                        Learn more about Donald Knuth
+                      </button>
+                      <div class="pioneer-card__avatar">
+                        <picture>
+                          <source
+                            srcset="/assets/images/donald_knuth.webp"
+                            type="image/webp"
+                          />
+                          <img
+                            src="/assets/images/donald_knuth.svg"
+                            alt="Donald Knuth"
+                            class="pioneer-card__avatar-image"
+                            width="80"
+                            height="80"
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                      <div class="pioneer-card__content">
+                        <h3 class="pioneer-card__title">Donald Knuth</h3>
+                        <p class="pioneer-card__description">
+                          A towering figure in computer science, Donald Knuth is
+                          the author of 'The Art of Computer Programming', a
+                          seminal work in the field.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <div class="carousel__controls">
+              <button
+                class="carousel__button carousel__button--prev"
+                aria-label="Previous slide"
+                type="button"
+              >
+                <img
+                  src="/assets/icons/chevron_left.svg"
+                  alt=""
+                  class="carousel__button-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+              </button>
+              <button
+                class="carousel__button carousel__button--next"
+                aria-label="Next slide"
+                type="button"
+              >
+                <img
+                  src="/assets/icons/chevron_right.svg"
+                  alt=""
+                  class="carousel__button-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="timeline-resources-container">
+        <!-- ============================================
+           TIMELINE SECTION
+           ============================================ -->
+        <section
+          id="timeline"
+          class="timeline"
+          aria-labelledby="timeline-heading"
+        >
+          <div class="timeline__container">
+            <h2
+              id="timeline-heading"
+              class="timeline__title"
+            >
+              Timeline of Innovation
+            </h2>
+
+            <ol class="timeline__list">
+              <!-- Timeline Item 1: Alan Turing's Paper -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/calendar.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1936: Alan Turing's 'On Computable Numbers'
+                  </h3>
+                  <p class="timeline__item-description">
+                    Alan Turing publishes his seminal paper, laying the
+                    theoretical foundation for modern computers.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 2: ENIAC -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/calendar.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">1945: ENIAC Unveiled</h3>
+                  <p class="timeline__item-description">
+                    The Electronic Numerical Integrator and Computer (ENIAC),
+                    the first general-purpose electronic digital computer, is
+                    completed, marking the dawn of the computer age.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 3: First Compiler -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/book.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1952: First Compiler Created
+                  </h3>
+                  <p class="timeline__item-description">
+                    Grace Hopper develops the first compiler, A-0 System,
+                    revolutionizing programming by allowing code to be written
+                    in a more human-readable form.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 4: Internet Born -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/globe.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1969: ARPANET: Birth of Internet
+                  </h3>
+                  <p class="timeline__item-description">
+                    The first message is sent over ARPANET, connecting computers
+                    at UCLA and Stanford. This network becomes the foundation of
+                    the modern internet.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 5: Personal Computer Revolution -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/file.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1977: Personal Computer Era Begins
+                  </h3>
+                  <p class="timeline__item-description">
+                    Apple II, Commodore PET, and TRS-80 are released, making
+                    computers accessible to individuals and small businesses for
+                    the first time.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 6: World Wide Web -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/globe.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1989: World Wide Web Invented
+                  </h3>
+                  <p class="timeline__item-description">
+                    Tim Berners-Lee proposes the World Wide Web, creating the
+                    first web browser and server. This innovation transforms the
+                    internet into a global information system.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 7: TCP/IP Protocol -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/book.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1974: TCP/IP Protocol Designed
+                  </h3>
+                  <p class="timeline__item-description">
+                    Vint Cerf and Bob Kahn publish the TCP/IP protocol, which
+                    becomes the standard for internet communication and enables
+                    global connectivity.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 8: Public Key Cryptography -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/file.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1976: Public Key Cryptography
+                  </h3>
+                  <p class="timeline__item-description">
+                    Whitfield Diffie and Martin Hellman publish their paper on
+                    public-key cryptography, revolutionizing secure
+                    communication and enabling modern e-commerce.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 9: Spanning Tree Protocol -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/calendar.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    1985: Spanning Tree Protocol
+                  </h3>
+                  <p class="timeline__item-description">
+                    Radia Perlman invents the Spanning Tree Protocol (STP),
+                    enabling robust and redundant network topologies that make
+                    modern LANs possible.
+                  </p>
+                </div>
+              </li>
+
+              <!-- Timeline Item 10: Smartphone Revolution -->
+              <li class="timeline__item">
+                <img
+                  src="/assets/icons/file.svg"
+                  alt=""
+                  class="timeline__item-icon"
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                />
+                <div class="timeline__item-content">
+                  <h3 class="timeline__item-title">
+                    2007: Smartphone Revolution
+                  </h3>
+                  <p class="timeline__item-description">
+                    Apple releases the iPhone, transforming mobile computing and
+                    ushering in the era of smartphones that put the power of
+                    computers in everyone's pocket.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section
+          id="resources"
+          class="resources"
+          aria-labelledby="resources-heading"
+        >
+          <div class="resources__container">
+            <h2
+              id="resources-heading"
+              class="resources__title"
+            >
+              Resources
+            </h2>
+
+            <div class="resources__groups">
+              <section
+                class="resources__group"
+                aria-labelledby="resources-group-wikipedia"
+              >
+                <h3
+                  id="resources-group-wikipedia"
+                  class="resources__group-label"
+                >
+                  Wikipedia
+                </h3>
+                <ul class="resources__list">
+                  <li class="resources__item">
+                    <span
+                      class="resources__icon resources__icon--book"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="resources__content">
+                      <h4 class="resources__item-title">
+                        History of Computing
+                      </h4>
+                      <p class="resources__item-description">
+                        A comprehensive overview of computing history, tracing
+                        the journey from mechanical devices to the digital era.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="resources__item">
+                    <span
+                      class="resources__icon resources__icon--book"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="resources__content">
+                      <h4 class="resources__item-title">Charles Babbage</h4>
+                      <p class="resources__item-description">
+                        An in-depth look at the life and innovations of Charles
+                        Babbage, visionary behind the Analytical Engine.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </section>
+
+              <section
+                class="resources__group"
+                aria-labelledby="resources-group-articles"
+              >
+                <h3
+                  id="resources-group-articles"
+                  class="resources__group-label"
+                >
+                  Academic Articles
+                </h3>
+                <ul class="resources__list">
+                  <li class="resources__item">
+                    <span
+                      class="resources__icon resources__icon--file"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="resources__content">
+                      <h4 class="resources__item-title">
+                        On Computable Numbers, with an Application to the
+                        Entscheidungsproblem
+                      </h4>
+                      <p class="resources__item-description">
+                        Alan Turing&apos;s seminal paper introducing the concept
+                        of a universal machine and the foundations of
+                        computation.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="resources__item">
+                    <span
+                      class="resources__icon resources__icon--calendar"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="resources__content">
+                      <h4 class="resources__item-title">The ENIAC</h4>
+                      <p class="resources__item-description">
+                        A detailed analysis of the ENIAC, one of the first
+                        electronic general-purpose computers and its
+                        architecture.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </section>
+
+              <section
+                class="resources__group"
+                aria-labelledby="resources-group-libraries"
+              >
+                <h3
+                  id="resources-group-libraries"
+                  class="resources__group-label"
+                >
+                  Online Libraries
+                </h3>
+                <ul class="resources__list">
+                  <li class="resources__item">
+                    <span
+                      class="resources__icon resources__icon--globe"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="resources__content">
+                      <h4 class="resources__item-title">The Digital Archive</h4>
+                      <p class="resources__item-description">
+                        A curated collection of historical manuscripts, rare
+                        photographs, and artifacts from the early days of
+                        computing.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="resources__item">
+                    <span
+                      class="resources__icon resources__icon--book"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="resources__content">
+                      <h4 class="resources__item-title">
+                        The Technical Library
+                      </h4>
+                      <p class="resources__item-description">
+                        A repository of technical papers and research focused on
+                        the evolution of computer science and engineering.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__container">
+        <p class="footer__link">
+          <a
+            href="https://www.github.com/m-oliveda"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Other Projects</a
+          >
+        </p>
+        <p class="footer__copyright"><small>© Mauricio Oliveda</small></p>
+      </div>
+    </footer>
+
+    <!-- Modal -->
+    <div
+      class="modal-backdrop"
+      id="pioneer-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
+      <div class="modal">
+        <div class="modal__header">
+          <div class="modal__header-content">
+            <div class="modal__avatar">
+              <picture>
+                <source
+                  id="modal-avatar-source"
+                  type="image/webp"
+                />
+                <img
+                  src="/assets/images/hero_image.png"
+                  alt=""
+                  class="modal__avatar-image"
+                  id="modal-avatar"
+                  width="80"
+                  height="80"
+                />
+              </picture>
+            </div>
+            <div class="modal__title-wrapper">
+              <h2
+                class="modal__title"
+                id="modal-title"
+              >
+                Pioneer Name
+              </h2>
+              <p
+                class="modal__subtitle"
+                id="modal-subtitle"
+              >
+                Pioneer Role
+              </p>
+            </div>
+          </div>
+          <button
+            class="modal__close"
+            aria-label="Close modal"
+            type="button"
+            id="modal-close"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="modal__body">
+          <div
+            class="modal__content"
+            id="modal-content"
+          >
+            <p class="modal__text">Loading pioneer information...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts - Load asynchronously for better performance -->
+    <script
+      type="module"
+      src="/js/main.js"
+      defer
+    ></script>
+  </body>
+</html>

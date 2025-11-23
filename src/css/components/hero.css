@@ -1,0 +1,292 @@
+/**
+ * Hero Section Component
+ * 
+ * Full-screen hero section with background image, centered content,
+ * title, description, and CTA button.
+ * 
+ * BEM Structure:
+ * - .hero (Block)
+ * - .hero__container (Element)
+ * - .hero__content (Element)
+ * - .hero__title (Element)
+ * - .hero__description (Element)
+ * - .hero__cta (Element)
+ */
+
+/* ============================================
+   HERO BLOCK
+   ============================================ */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: var(--spacing-xs) 0;
+  background-color: var(--color-background);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+/* Background Image with WebP support */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Fallback for browsers that don't support WebP */
+  background-image: url("/assets/images/hero_image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* WebP support for modern browsers */
+.webp .hero::before {
+  background-image: url("/assets/images/hero_image.webp");
+}
+
+/* Dark overlay for better text readability */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 2;
+  transition: background var(--transition-base);
+}
+
+/* Dark theme - lighter overlay since background is already dark */
+[data-theme="dark"] .hero::after {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+/* ============================================
+   HERO CONTAINER
+   ============================================ */
+
+.hero__container {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: auto;
+  padding: 0 var(--spacing-sm);
+}
+
+/* ============================================
+   HERO CONTENT
+   ============================================ */
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  padding: var(--spacing-md) 0;
+}
+
+/* ============================================
+   HERO TITLE
+   ============================================ */
+
+.hero__title {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-h1);
+  color: #ffffff;
+  max-width: 900px;
+}
+
+/* ============================================
+   HERO DESCRIPTION
+   ============================================ */
+
+.hero__description {
+  margin: 0 0 var(--spacing-md) 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  letter-spacing: var(--letter-spacing-body);
+  color: #ffffff;
+  opacity: 0.95;
+  max-width: 800px;
+}
+
+/* ============================================
+   HERO CTA BUTTON
+   ============================================ */
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacing-xs) * 1.5) var(--spacing-md);
+  font-family: var(--font-button);
+  font-size: var(--font-size-button);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-button);
+  letter-spacing: var(--letter-spacing-button);
+  color: #ffffff;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-base),
+    transform var(--transition-fast),
+    box-shadow var(--transition-base);
+  box-shadow: var(--shadow-md);
+}
+
+/* Hover State */
+.hero__cta:hover {
+  background-color: var(--color-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+  color: var(--color-surface);
+}
+
+/* Focus State (Accessibility) */
+.hero__cta:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* Active State */
+.hero__cta:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Disabled State */
+.hero__cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 768px) {
+  .hero__container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .hero__content {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .hero__title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .hero__description {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .hero__cta {
+    padding: calc(var(--spacing-xs) * 1.75) calc(var(--spacing-sm) * 2.5);
+    font-size: var(--font-size-body);
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100vh;
+  }
+
+  .hero__container {
+    padding: 0 var(--spacing-lg);
+  }
+
+  .hero__content {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .hero__title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .hero__description {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .hero__cta {
+    padding: var(--spacing-sm) calc(var(--spacing-sm) * 3);
+    font-size: var(--font-size-body);
+  }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .hero__container {
+    max-width: 1400px;
+  }
+
+  .hero__title {
+    max-width: 900px;
+  }
+
+  .hero__description {
+    max-width: 700px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .hero::after {
+    transition: none;
+  }
+
+  .hero__cta {
+    transition: background-color var(--transition-base);
+    transform: none !important;
+  }
+
+  .hero__cta:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .hero__title {
+    font-weight: var(--font-weight-bold);
+  }
+
+  .hero__cta {
+    border: 2px solid currentColor;
+  }
+}

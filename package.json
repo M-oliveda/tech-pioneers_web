@@ -1,0 +1,50 @@
+{
+  "name": "techpioneers-web",
+  "version": "1.0.0",
+  "description": "A portfolio project showcasing key figures in tech industry - built with vanilla JavaScript, HTML5, and CSS3",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write \"src/**/*.{js,css,html}\"",
+    "format:check": "prettier --check \"src/**/*.{js,css,html}\"",
+    "prepare": "husky",
+    "optimize:images": "node scripts/optimize-images.js",
+    "image:dimensions": "node scripts/get-image-dimensions.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauricio/techpioneers_web.git"
+  },
+  "keywords": [
+    "portfolio",
+    "vanilla-javascript",
+    "vite",
+    "responsive-design",
+    "accessibility",
+    "docker",
+    "cicd"
+  ],
+  "author": "Mauricio Oliveda",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mauricio/techpioneers_web/issues"
+  },
+  "homepage": "https://github.com/mauricio/techpioneers_web#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "autoprefixer": "^10.4.22",
+    "cssnano": "^7.1.2",
+    "eslint": "^9.39.0",
+    "husky": "^9.1.7",
+    "image-size": "^2.0.2",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "sharp": "^0.34.5",
+    "terser": "^5.36.0",
+    "vite": "^7.1.12"
+  }
+}

@@ -78,7 +78,6 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
    ```
 
 4. **Run the development server**
-
    - **Option A: Without Docker (Quick Start)**
 
    ```bash
@@ -86,7 +85,6 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
    ```
 
    Open [http://localhost:5173](http://localhost:5173) in your browser.
-
    - **Option B: With Docker (Recommended)**
 
    ```bash
@@ -101,40 +99,46 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build production-ready bundle |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint to check code quality |
-| `npm run lint:fix` | Fix auto-fixable ESLint errors |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check code formatting without changes |
+| Command                | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Start development server with hot reload |
+| `npm run build`        | Build production-ready bundle            |
+| `npm run preview`      | Preview production build locally         |
+| `npm run lint`         | Run ESLint to check code quality         |
+| `npm run lint:fix`     | Fix auto-fixable ESLint errors           |
+| `npm run format`       | Format code with Prettier                |
+| `npm run format:check` | Check code formatting without changes    |
 
 ### Docker Commands
 
-#### Local Development (Auto-loaded override)
+**Note:** Docker is used exclusively for **local development**. Cloud environments (Preview, Development, Staging, Production) are deployed directly to **Google Cloud Run** via GitHub Actions.
 
-| Command | Description |
-|---------|-------------|
-| `docker compose up --build` | Start development environment (foreground) |
-| `docker compose up -d` | Start development environment (detached) |
-| `docker compose logs -f` | View live logs |
-| `docker compose down` | Stop and remove containers |
-| `docker compose restart web` | Restart a specific service |
-| `docker compose exec web bash` | Open shell inside container |
+#### Local Development
 
-#### Staging Environment
+| Command                      | Description                                |
+| ---------------------------- | ------------------------------------------ |
+| `docker compose up --build`  | Start development environment (foreground) |
+| `docker compose up -d`       | Start development environment (detached)   |
+| `docker compose logs -f`     | View live logs                             |
+| `docker compose down`        | Stop and remove containers                 |
+| `docker compose restart web` | Restart the web service                    |
+| `docker compose exec web sh` | Open shell inside container                |
 
-| Command | Description |
-|---------|-------------|
-| `docker compose -f docker-compose.yml -f docker-compose.staging.yml up --build -d` | Build and run staging environment |
+**Environment File:** Local development uses `.env.local` for environment variables
 
-#### Production Environment
+#### Building Production Image Locally (Testing Only)
 
-| Command | Description |
-|---------|-------------|
-| `docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d` | Build and run production environment |
+To test the production build locally before deploying:
+
+```bash
+# Build production image
+docker build --target production -t techpioneers:prod .
+
+# Run production image locally
+docker run -p 8080:80 techpioneers:prod
+
+# Access at http://localhost:8080
+```
 
 ### Project Structure
 
@@ -143,8 +147,11 @@ techpioneers/
 ├── .github/
 │   └── workflows/
 │       ├── pr-test.yml              # PR validation workflow
-│       ├── deploy-staging.yml       # Auto-deploy to staging (develop branch)
-│       └── deploy-production.yml    # Auto-deploy to production (main branch)
+│       ├── deploy-preview.yml       # Auto-deploy to preview (PR environments)
+│       ├── cleanup-preview.yml      # Cleanup preview environments on PR close
+│       ├── deploy-development.yml   # Auto-deploy to development (develop branch)
+│       ├── deploy-staging.yml       # Auto-deploy to staging (release/* branches)
+│       └── deploy-production.yml    # Deploy to production (main + manual approval)
 ├── .husky/
 │   ├── pre-commit                   # Pre-commit hooks
 │   └── commit-msg                   # Commit message validation
@@ -192,16 +199,12 @@ techpioneers/
 │   └── index.html                   # Main HTML file
 ├── .dockerignore                    # Docker ignore patterns
 ├── .env.example                     # Environment variables template
-├── .eslintrc.js                     # ESLint configuration
+├── eslint.config.js                 # ESLint configuration
 ├── .gitignore                       # Git ignore patterns
 ├── .prettierrc.json                 # Prettier configuration
 ├── AGENTS.md                        # AI agent development guide
-├── docker-compose.yml               # Shared Docker configuration
-├── docker-compose.override.yml      # Local environment
-├── docker-compose.staging.yml       # Staging environment
-├── docker-compose.prod.yml          # Production environment
-├── Dockerfile.dev                   # Development Dockerfile
-├── Dockerfile.prod                  # Production Dockerfile (multi-stage)
+├── docker-compose.yml               # Local development configuration
+├── Dockerfile                       # Multi-stage Dockerfile (dev & prod targets)
 ├── nginx.conf                       # Nginx configuration for production
 ├── LICENSE                          # Project license
 ├── MASTERPLAN.md                    # Comprehensive project blueprint
@@ -229,15 +232,20 @@ All styles follow the **Block Element Modifier (BEM)** naming convention:
 
 ```css
 /* Block */
-.pioneer-card { }
+.pioneer-card {
+}
 
 /* Element */
-.pioneer-card__image { }
-.pioneer-card__title { }
+.pioneer-card__image {
+}
+.pioneer-card__title {
+}
 
 /* Modifier */
-.pioneer-card--featured { }
-.pioneer-card--clickable { }
+.pioneer-card--featured {
+}
+.pioneer-card--clickable {
+}
 ```
 
 ---
@@ -264,35 +272,35 @@ We use [Gitmoji](https://gitmoji.dev/) for commit messages with the following st
 
 **Gitmoji Reference:**
 
-| Emoji | Code | Description | Use Case |
-|-------|------|-------------|----------|
-| 🎉 | `:tada:` | Initial commit | First commit of the project |
-| ✨ | `:sparkles:` | New feature | Introducing new features |
-| 🐛 | `:bug:` | Bug fix | Fixing a bug |
-| 📝 | `:memo:` | Documentation | Add or update documentation |
-| 🎨 | `:art:` | Code structure/format | Improve structure/format of code |
-| ⚡️ | `:zap:` | Performance | Improve performance |
-| 🔥 | `:fire:` | Remove code/files | Remove code or files |
-| 🚀 | `:rocket:` | Deploy | Deploy stuff |
-| 💄 | `:lipstick:` | UI/style | Add or update UI and style files |
-| ✅ | `:white_check_mark:` | Tests | Add, update, or pass tests |
-| 🔒️ | `:lock:` | Security | Fix security issues |
-| 🔧 | `:wrench:` | Configuration | Add or update configuration files |
-| 🚨 | `:rotating_light:` | Linter | Fix compiler/linter warnings |
-| 🚧 | `:construction:` | Work in progress | Work in progress |
-| ♻️ | `:recycle:` | Refactor | Refactor code |
-| ⬆️ | `:arrow_up:` | Dependencies | Upgrade dependencies |
-| ⬇️ | `:arrow_down:` | Dependencies | Downgrade dependencies |
-| 🔀 | `:twisted_rightwards_arrows:` | Merge | Merge branches |
-| ➕ | `:heavy_plus_sign:` | Dependency | Add a dependency |
-| ➖ | `:heavy_minus_sign:` | Dependency | Remove a dependency |
-| 🌐 | `:globe_with_meridians:` | Internationalization | Internationalization and localization |
-| 💚 | `:green_heart:` | CI | Fix CI Build |
-| 📱 | `:iphone:` | Responsive | Work on responsive design |
-| 🍱 | `:bento:` | Assets | Add or update assets |
-| ♿️ | `:wheelchair:` | Accessibility | Improve accessibility |
-| 🏗️ | `:building_construction:` | Architecture | Make architectural changes |
-| 📦️ | `:package:` | Build | Add or update compiled files or packages |
+| Emoji | Code                          | Description           | Use Case                                 |
+| ----- | ----------------------------- | --------------------- | ---------------------------------------- |
+| 🎉    | `:tada:`                      | Initial commit        | First commit of the project              |
+| ✨    | `:sparkles:`                  | New feature           | Introducing new features                 |
+| 🐛    | `:bug:`                       | Bug fix               | Fixing a bug                             |
+| 📝    | `:memo:`                      | Documentation         | Add or update documentation              |
+| 🎨    | `:art:`                       | Code structure/format | Improve structure/format of code         |
+| ⚡️   | `:zap:`                       | Performance           | Improve performance                      |
+| 🔥    | `:fire:`                      | Remove code/files     | Remove code or files                     |
+| 🚀    | `:rocket:`                    | Deploy                | Deploy stuff                             |
+| 💄    | `:lipstick:`                  | UI/style              | Add or update UI and style files         |
+| ✅    | `:white_check_mark:`          | Tests                 | Add, update, or pass tests               |
+| 🔒️   | `:lock:`                      | Security              | Fix security issues                      |
+| 🔧    | `:wrench:`                    | Configuration         | Add or update configuration files        |
+| 🚨    | `:rotating_light:`            | Linter                | Fix compiler/linter warnings             |
+| 🚧    | `:construction:`              | Work in progress      | Work in progress                         |
+| ♻️    | `:recycle:`                   | Refactor              | Refactor code                            |
+| ⬆️    | `:arrow_up:`                  | Dependencies          | Upgrade dependencies                     |
+| ⬇️    | `:arrow_down:`                | Dependencies          | Downgrade dependencies                   |
+| 🔀    | `:twisted_rightwards_arrows:` | Merge                 | Merge branches                           |
+| ➕    | `:heavy_plus_sign:`           | Dependency            | Add a dependency                         |
+| ➖    | `:heavy_minus_sign:`          | Dependency            | Remove a dependency                      |
+| 🌐    | `:globe_with_meridians:`      | Internationalization  | Internationalization and localization    |
+| 💚    | `:green_heart:`               | CI                    | Fix CI Build                             |
+| 📱    | `:iphone:`                    | Responsive            | Work on responsive design                |
+| 🍱    | `:bento:`                     | Assets                | Add or update assets                     |
+| ♿️    | `:wheelchair:`                | Accessibility         | Improve accessibility                    |
+| 🏗️    | `:building_construction:`     | Architecture          | Make architectural changes               |
+| 📦️   | `:package:`                   | Build                 | Add or update compiled files or packages |
 
 **Examples:**
 
@@ -325,52 +333,87 @@ Husky automatically runs the following checks before each commit:
 
 ### Environments
 
-| Environment | Branch | Service Name | URL | Auto-Deploy |
-|-------------|--------|--------------|-----|-------------|
-| Development | local | N/A | localhost:5173 | N/A |
-| Staging | `develop` | techpioneers-staging | techpioneers-staging-[id].run.app | ✅ Yes |
-| Production | `main` | techpioneers-prod | techpioneers-prod-[id].run.app | ✅ Yes |
+| **Environment** | **Branch Source**   | **Infrastructure**   | **URL**                               | **Auto-Deploy**    | **Access**  | **Purpose**                                                   |
+| --------------- | ------------------- | -------------------- | ------------------------------------- | ------------------ | ----------- | ------------------------------------------------------------- |
+| **Local**       | Feature branches    | Docker (development) | localhost:5173                        | N/A                | Public      | Local development, testing, debugging                         |
+| **Preview**     | Pull Requests (PRs) | Google Cloud Run     | techpioneers-pr-{number}-[id].run.app | ✅ Yes (on PR)     | 🔒 Password | Test individual PRs in isolated, ephemeral environments       |
+| **Development** | `develop`           | Google Cloud Run     | techpioneers-development-[id].run.app | ✅ Yes             | 🔒 Password | Integrate features, run integration tests, catch issues early |
+| **Staging**     | `release/*`         | Google Cloud Run     | techpioneers-staging-[id].run.app     | ✅ Yes             | 🔒 Password | Final validation, UAT, QA, performance checks                 |
+| **Production**  | `main` + tags       | Google Cloud Run     | techpioneers-prod-[id].run.app        | ⚠️ Manual approval | ✅ Public   | Live system used by real users                                |
+
+### Environment Authentication
+
+All non-production environments (Preview, Development, Staging) are protected with **HTTP Basic Authentication** to prevent unauthorized access. Production is publicly accessible.
+
+**For detailed setup instructions**, see [.github/AUTHENTICATION_SETUP.md](./.github/AUTHENTICATION_SETUP.md)
+
+**Quick Overview:**
+
+- **Protected Environments**: Development, Staging, Preview (require username/password)
+- **Public Environment**: Production (no authentication required)
+- **Authentication Method**: HTTP Basic Authentication via Nginx
+- **Credentials**: Configured via GitHub Secrets per environment
+
+**Key Points:**
+
+- **Local Development**: Uses Docker with hot-reloading for feature branches
+- **Preview (PRs)**: Ephemeral environments created for each PR, automatically cleaned up on close
+- **Development (develop branch)**: Integration environment for testing feature combinations
+- **Staging (release/\* branches)**: Production-like environment for final validation before release
+- **Production (main branch)**: Requires manual approval before deployment, tagged releases
 
 ### CI/CD Pipelines
 
-Three GitHub Actions workflows automate testing and deployment:
+Six GitHub Actions workflows automate testing and deployment:
 
 1. **`pr-test.yml`** - Validates pull requests to `develop` or `main` (lint, format, build, Docker build test)
-2. **`deploy-staging.yml`** - Auto-deploys `develop` branch to staging environment
-3. **`deploy-production.yml`** - Auto-deploys `main` branch to production with versioning and GitHub releases
+2. **`deploy-preview.yml`** - Creates ephemeral preview environments for each PR
+3. **`cleanup-preview.yml`** - Removes preview environments when PRs are closed
+4. **`deploy-development.yml`** - Auto-deploys `develop` branch to development environment
+5. **`deploy-staging.yml`** - Auto-deploys `release/*` branches to staging environment
+6. **`deploy-production.yml`** - Deploys `main` branch to production with manual approval, versioning, and GitHub releases
 
 ### Docker Image Tagging Strategy
 
-| Branch | Docker Tags | Cloud Run Service | Description |
-|--------|-------------|-------------------|-------------|
-| `develop` | `latest`, `{git-sha}` | techpioneers-staging | Auto-deploy on every push |
-| `main` | `{version}`, `stable` | techpioneers-prod | Stable releases with SemVer |
-| Feature branches | N/A | N/A | Local development only |
+| **Environment** | **Branch Source** | **Build Target** | **Docker Tags**                                     | **Cloud Run Service**      | **Description**                           |
+| --------------- | ----------------- | ---------------- | --------------------------------------------------- | -------------------------- | ----------------------------------------- |
+| **Local**       | feature/\*        | `development`    | N/A (built locally)                                 | N/A                        | Local development only with hot-reloading |
+| **Preview**     | Pull Requests     | `production`     | `pr-{number}`                                       | `techpioneers-pr-{number}` | Ephemeral, cleaned up on PR close         |
+| **Development** | `develop`         | `production`     | `development`, `dev-{git-sha}`                      | `techpioneers-development` | Auto-deploy on every push to develop      |
+| **Staging**     | `release/*`       | `production`     | `staging`, `staging-{version}`, `staging-{git-sha}` | `techpioneers-staging`     | Auto-deploy on push to release branches   |
+| **Production**  | `main` + tags     | `production`     | `{version}`, `stable`, `production`                 | `techpioneers-prod`        | Manual approval + tagged releases         |
+
+**Build Targets:**
+
+- `development`: For local Docker development with hot-reloading and bind mounts
+- `production`: For all Cloud Run deployments (optimized multi-stage build with Nginx)
 
 **Version Format:**
 
-- Staging: `latest` (always latest from develop) + Git SHA for traceability
-- Production: `v1.0.0` (from package.json) + `stable` tag for rollback capability
+- Preview: `pr-{number}` (e.g., `pr-42`)
+- Development: `development` + `dev-{git-sha}` for traceability
+- Staging: `staging` + `staging-{version}` + `staging-{git-sha}`
+- Production: `v1.0.0` (from package.json or tag) + `stable` + `production` for rollback
 
-### Manual Deployment
+### Manual Deployment to Google Cloud Run
 
-For manual deployments or testing:
+For manual deployments or testing (typically automated via CI/CD):
 
 ```bash
 # Set variables
-export PROJECT_ID="your-project-id"
+export PROJECT_ID="your-gcp-project-id"
 export REGION="us-central1"
 export IMAGE_NAME="techpioneers"
 export VERSION="v1.0.0"
 
-# Build production image
-docker build -f Dockerfile.prod -t ${IMAGE_NAME}:${VERSION} .
+# Build production image with production target
+docker build --target production -t ${IMAGE_NAME}:${VERSION} .
 
-# Tag for Artifact Registry
+# Tag for Google Artifact Registry
 docker tag ${IMAGE_NAME}:${VERSION} \
   ${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION}
 
-# Configure Docker authentication
+# Configure Docker authentication for Artifact Registry
 gcloud auth configure-docker ${REGION}-docker.pkg.dev
 
 # Push to Artifact Registry
@@ -407,6 +450,8 @@ gcloud run deploy techpioneers-prod \
   --cpu-throttling
 ```
 
+**Note:** Manual deployments are rarely needed as CI/CD pipelines handle deployments automatically from `develop` and `main` branches.
+
 ## ♿ Accessibility
 
 This project is committed to web accessibility and follows **WCAG 2.1 Level AA** standards:
@@ -430,16 +475,16 @@ This project is committed to web accessibility and follows **WCAG 2.1 Level AA**
 
 Target metrics based on Lighthouse audits:
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| Performance | 90+ | ✅ |
-| Accessibility | 90+ | ✅ |
-| Best Practices | 90+ | ✅ |
-| SEO | 90+ | ✅ |
-| First Contentful Paint | < 1.5s | ✅ |
-| Largest Contentful Paint | < 2.5s | ✅ |
-| Cumulative Layout Shift | < 0.1 | ✅ |
-| Time to Interactive | < 3.5s | ✅ |
+| Metric                   | Target | Status |
+| ------------------------ | ------ | ------ |
+| Performance              | 90+    | ✅     |
+| Accessibility            | 90+    | ✅     |
+| Best Practices           | 90+    | ✅     |
+| SEO                      | 90+    | ✅     |
+| First Contentful Paint   | < 1.5s | ✅     |
+| Largest Contentful Paint | < 2.5s | ✅     |
+| Cumulative Layout Shift  | < 0.1  | ✅     |
+| Time to Interactive      | < 3.5s | ✅     |
 
 ## 📝 Environment Variables
 
@@ -492,6 +537,7 @@ This project is licensed under the **Apache License** - see the [LICENSE](./LICE
 
 - [MASTERPLAN.md](./MASTERPLAN.md) - Comprehensive project blueprint
 - [AGENTS.md](./AGENTS.md) - AI agent development guide
+- [.github/AUTHENTICATION_SETUP.md](./.github/AUTHENTICATION_SETUP.md) - Environment authentication guide
 
 ---
 

@@ -65,8 +65,11 @@ techpioneers/
 ├── .github/
 │   └── workflows/
 │       ├── pr-test.yml              # PR validation workflow
-│       ├── deploy-staging.yml       # Auto-deploy to staging (develop branch)
-│       └── deploy-production.yml    # Auto-deploy to production (main branch)
+│       ├── deploy-preview.yml       # Auto-deploy to preview (PR environments)
+│       ├── cleanup-preview.yml      # Cleanup preview environments on PR close
+│       ├── deploy-development.yml   # Auto-deploy to development (develop branch)
+│       ├── deploy-staging.yml       # Auto-deploy to staging (release/* branches)
+│       └── deploy-production.yml    # Deploy to production (main + manual approval)
 ├── .husky/
 │   ├── pre-commit                   # Pre-commit hooks
 │   └── commit-msg                   # Commit message validation
@@ -114,16 +117,12 @@ techpioneers/
 │   └── index.html                   # Main HTML file
 ├── .dockerignore                    # Docker ignore patterns
 ├── .env.example                     # Environment variables template
-├── .eslintrc.js                     # ESLint configuration (not .json)
+├── eslint.config.js                 # ESLint configuration (flat config)
 ├── .gitignore                       # Git ignore patterns
 ├── .prettierrc.json                 # Prettier configuration
 ├── AGENTS.md                        # AI agent development guide
-├── docker-compose.yml               # Shared Docker configuration
-├── docker-compose.override.yml      # Local environment
-├── docker-compose.staging.yml       # Staging environment
-├── docker-compose.prod.yml          # Production environment
-├── Dockerfile.dev                   # Development Dockerfile
-├── Dockerfile.prod                  # Production Dockerfile (multi-stage)
+├── docker-compose.yml               # Local development configuration
+├── Dockerfile                       # Multi-stage Dockerfile (dev & prod targets)
 ├── nginx.conf                       # Nginx configuration for production
 ├── LICENSE                          # Project license
 ├── MASTERPLAN.md                    # This file
@@ -191,16 +190,22 @@ The project consists of a **single-page application** with the following section
 
 ```css
 /* Block */
-.pioneer-card { }
+.pioneer-card {
+}
 
 /* Element */
-.pioneer-card__image { }
-.pioneer-card__title { }
-.pioneer-card__description { }
+.pioneer-card__image {
+}
+.pioneer-card__title {
+}
+.pioneer-card__description {
+}
 
 /* Modifier */
-.pioneer-card--featured { }
-.pioneer-card--clickable { }
+.pioneer-card--featured {
+}
+.pioneer-card--clickable {
+}
 ```
 
 #### CSS Custom Properties (Design Tokens)
@@ -212,18 +217,18 @@ The project consists of a **single-page application** with the following section
   --color-secondary: #...;
   --color-background: #...;
   --color-text: #...;
-  
+
   /* Typography */
-  --font-primary: '...';
+  --font-primary: "...";
   --font-size-base: 16px;
   --line-height-base: 1.5;
-  
+
   /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
   --spacing-md: 2rem;
   --spacing-lg: 4rem;
-  
+
   /* Breakpoints (for JS) */
   --breakpoint-mobile: 768px;
   --breakpoint-tablet: 1024px;
@@ -254,13 +259,13 @@ All JavaScript follows **ES6 modules** pattern with clear separation of concerns
 ```javascript
 // Custom vanilla JS carousel implementation
 class Carousel {
-  constructor(element, options) { }
-  init() { }
-  next() { }
-  prev() { }
-  goToSlide(index) { }
-  autoPlay() { }
-  destroy() { }
+  constructor(element, options) {}
+  init() {}
+  next() {}
+  prev() {}
+  goToSlide(index) {}
+  autoPlay() {}
+  destroy() {}
 }
 ```
 
@@ -277,11 +282,11 @@ class Carousel {
 ```javascript
 // Custom modal system
 class Modal {
-  constructor() { }
-  open(pioneerData) { }
-  close() { }
-  handleKeyboard(e) { }
-  trapFocus() { }
+  constructor() {}
+  open(pioneerData) {}
+  close() {}
+  handleKeyboard(e) {}
+  trapFocus() {}
 }
 ```
 
@@ -297,12 +302,12 @@ class Modal {
 ```javascript
 // Theme management
 class ThemeSwitcher {
-  constructor() { }
-  init() { }
-  toggle() { }
-  setTheme(theme) { }
-  savePreference() { }
-  loadPreference() { }
+  constructor() {}
+  init() {}
+  toggle() {}
+  setTheme(theme) {}
+  savePreference() {}
+  loadPreference() {}
 }
 ```
 
@@ -317,10 +322,10 @@ class ThemeSwitcher {
 ```javascript
 // Scroll-triggered animations
 class AnimationController {
-  constructor() { }
-  init() { }
-  observeElements() { }
-  animateOnScroll(entries) { }
+  constructor() {}
+  init() {}
+  observeElements() {}
+  animateOnScroll(entries) {}
 }
 ```
 
@@ -335,10 +340,10 @@ class AnimationController {
 ```javascript
 // Mobile navigation
 class Navigation {
-  constructor() { }
-  init() { }
-  toggle() { }
-  close() { }
+  constructor() {}
+  init() {}
+  toggle() {}
+  close() {}
 }
 ```
 
@@ -453,9 +458,9 @@ http {
     gzip_vary on;
     gzip_proxied any;
     gzip_comp_level 6;
-    gzip_types text/plain text/css text/xml text/javascript 
-               application/json application/javascript application/xml+rss 
-               application/rss+xml font/truetype font/opentype 
+    gzip_types text/plain text/css text/xml text/javascript
+               application/json application/javascript application/xml+rss
+               application/rss+xml font/truetype font/opentype
                application/vnd.ms-fontobject image/svg+xml;
 
     server {
@@ -558,7 +563,6 @@ docker-compose*.yml
 # Misc
 .husky
 .prettierrc.json
-.eslintrc.js
 ```
 
 **Purpose:**
@@ -573,84 +577,51 @@ docker-compose*.yml
 
 #### Docker Best Practices
 
-- **Use `docker-compose.yml`** as the **base configuration** shared by all environments (networks, shared volumes, common service names).
-- **Use `docker-compose.override.yml`** for **local development**. This file is automatically loaded and includes things like:
-  - **Bind mounts** for hot-reloading.
-  - **Environment variables** for local settings.
-  - **Exposed ports** for easy access.
-- **Use `docker-compose.staging.yml`** for the **staging/testing environment**. This file:
-  - Overrides the `build` context to use `Dockerfile.prod`.
-  - Specifies production-like **environment variables** (database URLs, external service keys).
-  - Exposes only necessary ports and doesn't include bind mounts.
-- **Use `docker-compose.prod.yml`** for the **production/live environment**. This file:
-  - Overrides the `build` context to use `Dockerfile.prod`.
-  - Specifies **live production environment variables** (production database URLs, final external service keys).
-  - Exposes only essential ports for the running application and **must not** include bind mounts or development tooling.
+- **Use `docker-compose.yml`** for **local development only**. This file:
+  - Uses the `.env.local` file for environment variables
+  - Includes **bind mounts** for hot-reloading
+  - Exposes ports for easy access (5173)
+  - Targets the `development` stage in the Dockerfile
+- **Cloud environments** (Preview, Development, Staging, Production) use **Google Cloud Run** directly
+  - No Docker Compose files needed for cloud deployments
+  - Docker images are built in GitHub Actions and pushed to Docker Hub
+  - Cloud Run pulls images from Docker Hub and deploys them
 
-#### `docker-compose.yml` (Base Configuration)
+#### `docker-compose.yml` (Local Development Only)
 
 ```yaml
-version: '3.8'
+name: techpioneers_local
 
 services:
   web:
     build:
       context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: techpioneers_local_web
+    env_file:
+      - .env.local
+    ports:
+      - "5173:5173"
+    volumes:
+      # Source code volumes for hot-reloading
+      - ./src:/app/src
+      - ./public:/app/public
+      # Configuration files (read-only)
+      - ./vite.config.js:/app/vite.config.js:ro
+      - ./eslint.config.js:/app/eslint.config.js:ro
+      - ./.prettierrc.json:/app/.prettierrc.json:ro
     networks:
       - app-network
     restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
 
 networks:
   app-network:
     driver: bridge
-```
-
-#### `docker-compose.override.yml` (Local Development - Auto-loaded)
-
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build:
-      dockerfile: Dockerfile.dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./src:/app/src
-      - ./public:/app/public
-    environment:
-      - NODE_ENV=development
-```
-
-#### `docker-compose.staging.yml` (Staging Override)
-
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build:
-      dockerfile: Dockerfile.prod
-    ports:
-      - "8080:80"
-    environment:
-      - NODE_ENV=staging
-```
-
-#### `docker-compose.prod.yml` (Production Override)
-
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build:
-      dockerfile: Dockerfile.prod
-    ports:
-      - "80:80"
-    environment:
-      - NODE_ENV=production
 ```
 
 ### Environment Variables
@@ -671,11 +642,14 @@ PORT=5173
 
 ### Workflow Overview
 
-Three automated workflows handle different aspects of the CI/CD pipeline:
+Six automated workflows handle different aspects of the CI/CD pipeline:
 
 1. **PR Testing** - Quality checks on pull requests
-2. **Staging Deployment** - Auto-deploy `develop` branch to staging
-3. **Production Deployment** - Auto-deploy `main` branch to production
+2. **Preview Deployment** - Ephemeral environments for each PR
+3. **Preview Cleanup** - Remove PR environments when closed
+4. **Development Deployment** - Auto-deploy `develop` branch to development environment
+5. **Staging Deployment** - Auto-deploy `release/*` branches to staging
+6. **Production Deployment** - Manual approval + deploy `main` branch to production
 
 ### Workflow 1: PR Testing (`.github/workflows/pr-test.yml`)
 
@@ -693,38 +667,52 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Lint code
         run: npm run lint
-      
+
       - name: Format check
         run: npm run format:check
-      
+
       - name: Build test
         run: npm run build
-      
+
       - name: Test Docker build
         run: docker build -f Dockerfile.prod -t test-build .
 ```
 
-### Workflow 2: Deploy Staging (`.github/workflows/deploy-staging.yml`)
+### Workflow 2: Deploy Preview (`.github/workflows/deploy-preview.yml`)
+
+**Trigger:** Pull request opened, synchronized, or reopened to `develop` or `main`
+
+**Purpose:** Create ephemeral preview environments for PR testing
+
+### Workflow 3: Cleanup Preview (`.github/workflows/cleanup-preview.yml`)
+
+**Trigger:** Pull request closed
+
+**Purpose:** Remove ephemeral preview environments
+
+### Workflow 4: Deploy Development (`.github/workflows/deploy-development.yml`)
 
 **Trigger:** Push to `develop` branch
 
-**Purpose:** Deploy latest changes to staging environment
+**Purpose:** Deploy latest changes to development environment for integration testing
+
+**Note:** Uses Docker Hub (free tier) instead of Artifact Registry to minimize costs.
 
 ```yaml
 name: Deploy to Staging
@@ -737,44 +725,48 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GCP_REGION }}
   SERVICE_NAME: techpioneers-staging
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_NAME: techpioneers
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 15
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -f Dockerfile.prod \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-      
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-      
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
-      
-      - name: Build Docker image
-        run: |
-          docker build -f Dockerfile.prod \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:latest \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            .
-      
-      - name: Push Docker image
-        run: |
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ github.sha }}
-      
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:latest \
+            --image=docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest \
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
@@ -786,7 +778,7 @@ jobs:
             --timeout=60 \
             --concurrency=100 \
             --cpu-throttling
-      
+
       - name: Get Service URL
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
@@ -795,13 +787,23 @@ jobs:
           echo "Staging deployed to: $SERVICE_URL"
 ```
 
+**Deployment URL:** `https://techpioneers-development-[random].run.app`
+
+### Workflow 5: Deploy Staging (`.github/workflows/deploy-staging.yml`)
+
+**Trigger:** Push to `release/*` branches
+
+**Purpose:** Deploy release candidates to staging for final validation and UAT
+
 **Deployment URL:** `https://techpioneers-staging-[random].run.app`
 
-### Workflow 3: Deploy Production (`.github/workflows/deploy-production.yml`)
+### Workflow 6: Deploy Production (`.github/workflows/deploy-production.yml`)
 
-**Trigger:** Push to `main` branch
+**Trigger:** Push to `main` branch, tags `v*`, or manual workflow dispatch
 
-**Purpose:** Deploy stable releases to production with versioning
+**Purpose:** Deploy stable releases to production with manual approval and versioning
+
+**Note:** Uses Docker Hub (free tier) instead of Artifact Registry to minimize costs.
 
 ```yaml
 name: Deploy to Production
@@ -814,53 +816,60 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GCP_REGION }}
   SERVICE_NAME: techpioneers-prod
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_NAME: techpioneers
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Get all history for proper versioning
-      
+          fetch-depth: 0 # Get all history for proper versioning
+
       - name: Get version from package.json
         id: version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=v${VERSION}" >> $GITHUB_OUTPUT
           echo "Deploying version: v${VERSION}"
-      
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -f Dockerfile.prod \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
+            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable \
+            .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-      
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-      
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
-      
-      - name: Build Docker image
-        run: |
-          docker build -f Dockerfile.prod \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:stable \
-            .
-      
-      - name: Push Docker image
-        run: |
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:stable
-      
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/techpioneers/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
+            --image=docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
@@ -872,7 +881,7 @@ jobs:
             --timeout=60 \
             --concurrency=100 \
             --cpu-throttling
-      
+
       - name: Get Service URL
         id: service-url
         run: |
@@ -881,42 +890,45 @@ jobs:
             --format='value(status.url)')
           echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
           echo "Production deployed to: $SERVICE_URL"
-      
+
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
           body: |
             🚀 Production deployment of TechPioneers ${{ steps.version.outputs.version }}
-            
+
             **Deployment Details:**
             - Service: ${{ env.SERVICE_NAME }}
             - Region: ${{ env.REGION }}
             - URL: ${{ steps.service-url.outputs.url }}
             - Commit: ${{ github.sha }}
-            
+
             **Changes:** See commit history for details.
           draft: false
           prerelease: false
+          generate_release_notes: true
 ```
 
 **Deployment URL:** `https://techpioneers-prod-[random].run.app`
 
-### Docker Image Tagging Strategy
+### Environment & Docker Image Tagging Strategy
 
-| Branch          | Docker Tags              | Cloud Run Service      | Description                    |
-|-----------------|--------------------------|------------------------|--------------------------------|
-| `develop`       | `latest`, `{git-sha}`    | techpioneers-staging   | Auto-deploy on every push      |
-| `main`          | `{version}`, `stable`    | techpioneers-prod      | Stable releases with SemVer    |
-| Feature branches| N/A                      | N/A                    | Local development only         |
+| **Environment** | **Branch Source**   | **Docker Tags**                                     | **Cloud Run Service**      | **Deployment Trigger**             | **Purpose**                                                       | **Security Level** | **Data Type**                  | **Who Uses It**           |
+| --------------- | ------------------- | --------------------------------------------------- | -------------------------- | ---------------------------------- | ----------------------------------------------------------------- | ------------------ | ------------------------------ | ------------------------- |
+| **Local**       | Feature branches    | N/A (built locally)                                 | N/A                        | Manual run on developer machine    | Local development, testing, debugging                             | Low                | Mock / local                   | Developers                |
+| **Preview**     | Pull Requests (PRs) | `pr-{number}`                                       | `techpioneers-pr-{number}` | Auto-deploy on every PR            | Test individual PRs in isolated, ephemeral environments           | Medium             | Synthetic / fake               | Devs, QA, Product         |
+| **Development** | `develop`           | `development`, `dev-{git-sha}`                      | `techpioneers-development` | Auto-deploy on push to `develop`   | Integrate features, run integration tests, catch issues early     | Medium             | Synthetic / partial anonymized | Devs, QA                  |
+| **Staging**     | `release/*`         | `staging`, `staging-{version}`, `staging-{git-sha}` | `techpioneers-staging`     | Auto-deploy on push to `release/*` | Final validation, regression testing, UAT, QA, performance checks | High               | Sanitized production-like      | QA, Product, Stakeholders |
+| **Production**  | `main` + tags       | `{version}`, `stable`, `production`                 | `techpioneers-prod`        | Manual approval for deploy + tag   | Live system used by real users                                    | Very High          | Real data                      | End-users, Ops            |
 
 **Version Format:**
 
-- Staging: `latest` (always latest from develop) + Git SHA for traceability
-- Production: `v1.0.0` (from package.json) + `stable` tag for rollback capability
+- Preview: `pr-{number}` (e.g., `pr-42`) - Ephemeral, cleaned up on PR close
+- Development: `development` (always latest from develop) + `dev-{git-sha}` for traceability
+- Staging: `staging` (always latest from release branch) + `staging-{version}` + `staging-{git-sha}`
+- Production: `v1.0.0` (from package.json or tag) + `stable` + `production` tags for rollback capability
 
 ## Git Workflow (GitFlow + SemVer)
 
@@ -950,35 +962,35 @@ Following **Gitmoji** specification:
 
 **Gitmoji Reference:**
 
-| Emoji | Code | Description | Use Case |
-|-------|------|-------------|----------|
-| 🎉 | `:tada:` | Initial commit | First commit of the project |
-| ✨ | `:sparkles:` | New feature | Introducing new features |
-| 🐛 | `:bug:` | Bug fix | Fixing a bug |
-| 📝 | `:memo:` | Documentation | Add or update documentation |
-| 🎨 | `:art:` | Code structure/format | Improve structure/format of code |
-| ⚡️ | `:zap:` | Performance | Improve performance |
-| 🔥 | `:fire:` | Remove code/files | Remove code or files |
-| 🚀 | `:rocket:` | Deploy | Deploy stuff |
-| 💄 | `:lipstick:` | UI/style | Add or update UI and style files |
-| ✅ | `:white_check_mark:` | Tests | Add, update, or pass tests |
-| 🔒️ | `:lock:` | Security | Fix security issues |
-| 🔧 | `:wrench:` | Configuration | Add or update configuration files |
-| 🚨 | `:rotating_light:` | Linter | Fix compiler/linter warnings |
-| 🚧 | `:construction:` | Work in progress | Work in progress |
-| ♻️ | `:recycle:` | Refactor | Refactor code |
-| ⬆️ | `:arrow_up:` | Dependencies | Upgrade dependencies |
-| ⬇️ | `:arrow_down:` | Dependencies | Downgrade dependencies |
-| 🔀 | `:twisted_rightwards_arrows:` | Merge | Merge branches |
-| ➕ | `:heavy_plus_sign:` | Dependency | Add a dependency |
-| ➖ | `:heavy_minus_sign:` | Dependency | Remove a dependency |
-| 🌐 | `:globe_with_meridians:` | Internationalization | Internationalization and localization |
-| 💚 | `:green_heart:` | CI | Fix CI Build |
-| 📱 | `:iphone:` | Responsive | Work on responsive design |
-| 🍱 | `:bento:` | Assets | Add or update assets |
-| ♿️ | `:wheelchair:` | Accessibility | Improve accessibility |
-| 🏗️ | `:building_construction:` | Architecture | Make architectural changes |
-| 📦️ | `:package:` | Build | Add or update compiled files or packages |
+| Emoji | Code                          | Description           | Use Case                                 |
+| ----- | ----------------------------- | --------------------- | ---------------------------------------- |
+| 🎉    | `:tada:`                      | Initial commit        | First commit of the project              |
+| ✨    | `:sparkles:`                  | New feature           | Introducing new features                 |
+| 🐛    | `:bug:`                       | Bug fix               | Fixing a bug                             |
+| 📝    | `:memo:`                      | Documentation         | Add or update documentation              |
+| 🎨    | `:art:`                       | Code structure/format | Improve structure/format of code         |
+| ⚡️   | `:zap:`                       | Performance           | Improve performance                      |
+| 🔥    | `:fire:`                      | Remove code/files     | Remove code or files                     |
+| 🚀    | `:rocket:`                    | Deploy                | Deploy stuff                             |
+| 💄    | `:lipstick:`                  | UI/style              | Add or update UI and style files         |
+| ✅    | `:white_check_mark:`          | Tests                 | Add, update, or pass tests               |
+| 🔒️   | `:lock:`                      | Security              | Fix security issues                      |
+| 🔧    | `:wrench:`                    | Configuration         | Add or update configuration files        |
+| 🚨    | `:rotating_light:`            | Linter                | Fix compiler/linter warnings             |
+| 🚧    | `:construction:`              | Work in progress      | Work in progress                         |
+| ♻️    | `:recycle:`                   | Refactor              | Refactor code                            |
+| ⬆️    | `:arrow_up:`                  | Dependencies          | Upgrade dependencies                     |
+| ⬇️    | `:arrow_down:`                | Dependencies          | Downgrade dependencies                   |
+| 🔀    | `:twisted_rightwards_arrows:` | Merge                 | Merge branches                           |
+| ➕    | `:heavy_plus_sign:`           | Dependency            | Add a dependency                         |
+| ➖    | `:heavy_minus_sign:`          | Dependency            | Remove a dependency                      |
+| 🌐    | `:globe_with_meridians:`      | Internationalization  | Internationalization and localization    |
+| 💚    | `:green_heart:`               | CI                    | Fix CI Build                             |
+| 📱    | `:iphone:`                    | Responsive            | Work on responsive design                |
+| 🍱    | `:bento:`                     | Assets                | Add or update assets                     |
+| ♿️    | `:wheelchair:`                | Accessibility         | Improve accessibility                    |
+| 🏗️    | `:building_construction:`     | Architecture          | Make architectural changes               |
+| 📦️   | `:package:`                   | Build                 | Add or update compiled files or packages |
 
 **Examples:**
 
@@ -1152,6 +1164,41 @@ _This command explicitly uses the base config and the production override to bui
 
 > **Note:** This configuration is optimized for **Google Cloud Free Tier** deployment.
 
+**Preview Service (techpioneers-pr-{number}):**
+
+```bash
+Service Name: techpioneers-pr-{number} (ephemeral)
+Region: us-central1
+CPU: 1 (CPU allocated only during request processing)
+Memory: 256Mi
+Min Instances: 0 (scales to zero - FREE)
+Max Instances: 1
+Concurrency: 80
+Timeout: 60s
+Port: 80
+Ingress: All
+Authentication: Allow unauthenticated
+CPU Allocation: CPU is only allocated during request processing
+Lifecycle: Deleted when PR is closed
+```
+
+**Development Service (techpioneers-development):**
+
+```bash
+Service Name: techpioneers-development
+Region: us-central1
+CPU: 1 (CPU allocated only during request processing)
+Memory: 256Mi
+Min Instances: 0 (scales to zero - FREE)
+Max Instances: 2
+Concurrency: 100
+Timeout: 60s
+Port: 80
+Ingress: All
+Authentication: Allow unauthenticated
+CPU Allocation: CPU is only allocated during request processing
+```
+
 **Staging Service (techpioneers-staging):**
 
 ```bash
@@ -1198,11 +1245,13 @@ CPU Allocation: CPU is only allocated during request processing
 
 #### Environment-Specific Deployments
 
-| Environment | Branch    | Service Name            | URL                                    | Auto-Deploy |
-|-------------|-----------|-------------------------|----------------------------------------|-------------|
-| Development | local     | N/A                     | localhost:5173                         | N/A         |
-| Staging     | `develop` | techpioneers-staging    | techpioneers-staging-[id].run.app      | Yes         |
-| Production  | `main`    | techpioneers-prod       | techpioneers-prod-[id].run.app         | Yes         |
+| Environment | Branch        | Service Name             | URL                                   | Auto-Deploy     |
+| ----------- | ------------- | ------------------------ | ------------------------------------- | --------------- |
+| Local       | feature/\*    | N/A                      | localhost:5173                        | N/A             |
+| Preview     | PR            | techpioneers-pr-{number} | techpioneers-pr-{number}-[id].run.app | Yes (on PR)     |
+| Development | `develop`     | techpioneers-development | techpioneers-development-[id].run.app | Yes             |
+| Staging     | `release/*`   | techpioneers-staging     | techpioneers-staging-[id].run.app     | Yes             |
+| Production  | `main` + tags | techpioneers-prod        | techpioneers-prod-[id].run.app        | Manual approval |
 
 ### Google Cloud Setup Prerequisites
 
@@ -1227,22 +1276,33 @@ gcloud config set project $PROJECT_ID
 # Enable Cloud Run API
 gcloud services enable run.googleapis.com
 
-# Enable Artifact Registry API
-gcloud services enable artifactregistry.googleapis.com
+# Note: We skip Artifact Registry API since we use Docker Hub (free) to avoid storage costs
+# gcloud services enable artifactregistry.googleapis.com
 
-# Enable Cloud Build API (for GitHub Actions)
+# Enable Cloud Build API (optional, for advanced CI/CD features)
 gcloud services enable cloudbuild.googleapis.com
 ```
 
-#### Create Artifact Registry Repository
+#### Docker Hub Setup (Replaces Artifact Registry)
 
-```bash
-# Create Docker repository in Artifact Registry
-gcloud artifacts repositories create techpioneers \
-  --repository-format=docker \
-  --location=us-central1 \
-  --description="TechPioneers Docker images"
-```
+**Why Docker Hub?**
+
+- Free tier for public images (unlimited pulls)
+- No storage costs (Artifact Registry charges $0.10/GB/month)
+- Sufficient for portfolio/demo projects
+- Easy integration with GitHub Actions
+
+**Setup Steps:**
+
+1. Create a Docker Hub account
+2. Create an access token:
+   - Go to docker to generate an access token.
+   - Click "New Access Token"
+   - Name: `github-actions-techpioneers`
+   - Permissions: Read, Write, Delete
+   - Copy the token (you won't see it again)
+
+3. Your images will be stored at: `docker.io/YOUR_USERNAME/techpioneers`
 
 #### Setup Service Account for GitHub Actions
 
@@ -1260,9 +1320,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:github-actions-deployer@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/iam.serviceAccountUser"
 
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --member="serviceAccount:github-actions-deployer@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --role="roles/artifactregistry.writer"
+# Note: We don't need artifactregistry.writer since we use Docker Hub
+# gcloud projects add-iam-policy-binding $PROJECT_ID \
+#   --member="serviceAccount:github-actions-deployer@${PROJECT_ID}.iam.gserviceaccount.com" \
+#   --role="roles/artifactregistry.writer"
 
 # Create and download service account key
 gcloud iam service-accounts keys create key.json \
@@ -1279,40 +1340,41 @@ Add these secrets to your GitHub repository (Settings → Secrets and variables 
 GCP_PROJECT_ID: your-project-id
 GCP_SA_KEY: <contents of key.json>
 GCP_REGION: us-central1
+DOCKERHUB_USERNAME: your-dockerhub-username
+DOCKERHUB_TOKEN: <your Docker Hub access token>
 ```
 
 ### Deployment Commands (Manual)
 
 For manual deployments or testing:
 
-#### Build and Push to Artifact Registry
+#### Build and Push to Docker Hub
 
 ```bash
 # Set variables
-export PROJECT_ID="your-project-id"
-export REGION="us-central1"
+export DOCKERHUB_USERNAME="your-dockerhub-username"
 export IMAGE_NAME="techpioneers"
 export VERSION="v1.0.0"
 
+# Login to Docker Hub
+docker login
+
 # Build production image
-docker build -f Dockerfile.prod -t ${IMAGE_NAME}:${VERSION} .
+docker build -f Dockerfile.prod -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} .
 
-# Tag for Artifact Registry
-docker tag ${IMAGE_NAME}:${VERSION} \
-  ${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION}
+# Push to Docker Hub
+docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION}
 
-# Configure Docker authentication
-gcloud auth configure-docker ${REGION}-docker.pkg.dev
-
-# Push to Artifact Registry
-docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION}
+# Tag as stable
+docker tag ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:stable
+docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:stable
 ```
 
 #### Deploy to Cloud Run (Staging)
 
 ```bash
 gcloud run deploy techpioneers-staging \
-  --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION} \
+  --image=docker.io/${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest \
   --platform=managed \
   --region=${REGION} \
   --allow-unauthenticated \
@@ -1330,7 +1392,7 @@ gcloud run deploy techpioneers-staging \
 
 ```bash
 gcloud run deploy techpioneers-prod \
-  --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/techpioneers/${IMAGE_NAME}:${VERSION} \
+  --image=docker.io/${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} \
   --platform=managed \
   --region=${REGION} \
   --allow-unauthenticated \
@@ -1417,13 +1479,13 @@ The application will continue to work, but you'll be charged:
 
 If you need even more cost savings, consider these alternatives:
 
-| Service | Free Tier | Best For |
-|---------|-----------|----------|
-| **Cloud Run** | 2M requests, 180K vCPU-sec, 360K GiB-sec | Dynamic content, APIs (our choice) |
-| **Firebase Hosting** | 10GB storage, 360MB/day transfer | Static sites only |
-| **Netlify** | 100GB bandwidth, 300 build minutes | Static sites with CI/CD |
-| **Vercel** | 100GB bandwidth, serverless functions | Next.js, static sites |
-| **GitHub Pages** | Unlimited for public repos | Simple static sites |
+| Service              | Free Tier                                | Best For                           |
+| -------------------- | ---------------------------------------- | ---------------------------------- |
+| **Cloud Run**        | 2M requests, 180K vCPU-sec, 360K GiB-sec | Dynamic content, APIs (our choice) |
+| **Firebase Hosting** | 10GB storage, 360MB/day transfer         | Static sites only                  |
+| **Netlify**          | 100GB bandwidth, 300 build minutes       | Static sites with CI/CD            |
+| **Vercel**           | 100GB bandwidth, serverless functions    | Next.js, static sites              |
+| **GitHub Pages**     | Unlimited for public repos               | Simple static sites                |
 
 **Why Cloud Run for this project:**
 
@@ -1513,65 +1575,74 @@ If you need even more cost savings, consider these alternatives:
 
 ### Phase 1: Project Setup (Week 1)
 
-- [ ] Initialize Git repository with GitFlow
-- [ ] Set up Vite project structure
-- [ ] Configure ESLint, Prettier, Husky
-- [ ] Create Docker configurations
-- [ ] Set up GitHub Actions workflows
-- [ ] Write README.md and AGENTS.md
-- [ ] Initial commit to `main` branch
+- [x] Initialize Git repository with GitFlow
+- [x] Set up Vite project structure
+- [x] Configure ESLint, Prettier, Husky
+- [x] Create Docker configurations
+- [x] Set up GitHub Actions workflows
+- [x] Write README.md and AGENTS.md
+- [x] Initial commit to `main` branch
 
 ### Phase 2: Design System Implementation (Week 1-2)
 
-- [ ] Extract design tokens from Figma
-- [ ] Create CSS custom properties (variables)
-- [ ] Implement typography system
-- [ ] Set up color palettes (light/dark themes)
-- [ ] Create base CSS (reset, utilities)
+- [x] Extract design tokens from Figma
+- [x] Create CSS custom properties (variables)
+- [x] Implement typography system
+- [x] Set up color palettes (light/dark themes)
+- [x] Create base CSS (reset, utilities)
 
 ### Phase 3: Component Development (Week 2-4)
 
-- [ ] Build HTML structure (semantic markup)
-- [ ] Implement Header component (mobile + desktop)
-- [ ] Create Hero section
-- [ ] Build Pioneer Card component (featured + clickable)
-- [ ] Develop Carousel component (vanilla JS)
-- [ ] Implement Modal system
-- [ ] Create Timeline component
-- [ ] Build Resources section
-- [ ] Implement Footer
+- [x] Build HTML structure (semantic markup)
+- [x] Implement Header component (mobile + desktop)
+- [x] Create Hero section
+- [x] Build Pioneer Card component (featured + clickable)
+- [x] Develop Carousel component (vanilla JS)
+- [x] Implement Modal system
+- [x] Create Timeline component
+- [x] Build Resources section
+- [x] Implement Footer
 
 ### Phase 4: Interactivity & Features (Week 4-5)
 
-- [ ] Implement theme switcher
-- [ ] Add carousel functionality (touch, keyboard)
-- [ ] Develop modal interactions
-- [ ] Create scroll animations
-- [ ] Implement mobile navigation
-- [ ] Add hover effects and transitions
+- [x] Implement theme switcher
+- [x] Add carousel functionality (touch, keyboard)
+- [x] Develop modal interactions
+- [x] Create scroll animations
+- [x] Implement mobile navigation
+- [x] Add hover effects and transitions
 
-### Phase 5: Content Integration (Week 5)
+### Phase 5: Content Integration & Environment Setup (Week 5-6)
 
-- [ ] Add pioneer data (4 featured + 6 more)
-- [ ] Insert timeline historical content
-- [ ] Add resources content
-- [ ] Optimize and compress images
-- [ ] Test all interactive elements
+- [x] Add pioneer data (4 featured + 6 more)
+- [x] Insert timeline historical content
+- [x] Add resources content
+- [x] Optimize and compress images
+- [x] Test all interactive elements
+- [x] Implement 5-environment deployment strategy
+- [x] Update docker-compose.yml to use .env.local
+- [x] Create GitHub workflow for Preview environment (PR deployments)
+- [x] Create GitHub workflow cleanup for Preview environments
+- [x] Rename and update Development environment workflow (develop branch)
+- [x] Create GitHub workflow for Staging environment (release/\* branches)
+- [x] Update Production workflow with manual approval requirement
+- [x] Update MASTERPLAN.md with new environment structure
+- [x] Update README.md with comprehensive environment documentation
 
 ### Phase 6: Testing & Optimization (Week 6)
 
-- [ ] Accessibility audit and fixes
+- [x] Accessibility audit and fixes
 - [ ] Cross-browser testing
-- [ ] Performance optimization
-- [ ] Lighthouse audit (target 90+)
-- [ ] Mobile/tablet/desktop testing
-- [ ] Code review and refactoring
+- [x] Performance optimization
+- [x] Lighthouse audit (target 90+)
+- [x] Mobile/tablet/desktop testing
+- [x] Code review and refactoring
 
 ### Phase 7: Deployment (Week 6-7)
 
-- [ ] Set up Google Cloud Project
-- [ ] Configure Cloud Run services
-- [ ] Test staging deployment (`latest` tag)
+- [x] Set up Google Cloud Project
+- [x] Configure Cloud Run services
+- [ ] Test staging deployment (`staging` tag)
 - [ ] Create first stable release (`v1.0.0`)
 - [ ] Deploy to production
 - [ ] Monitor and document deployment
