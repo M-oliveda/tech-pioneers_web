@@ -1,6 +1,6 @@
 # TechPioneers
 
-![Desktop Version Screenshot](./app_desktop_screenshot.png)
+![Desktop Version Screenshot](app_desktop_screenshot.png)
 
 ## 📖 About The Project
 
@@ -63,8 +63,8 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/mauricio/techpioneers_web.git
-   cd web
+   git clone https://github.com/M-oliveda/tech-pioneers_web.git
+   cd tech-pioneers_web
    ```
 
 2. **Install dependencies**
