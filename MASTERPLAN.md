@@ -1632,7 +1632,7 @@ If you need even more cost savings, consider these alternatives:
 ### Phase 6: Testing & Optimization (Week 6)
 
 - [x] Accessibility audit and fixes
-- [ ] Cross-browser testing
+- [x] Cross-browser testing
 - [x] Performance optimization
 - [x] Lighthouse audit (target 90+)
 - [x] Mobile/tablet/desktop testing
