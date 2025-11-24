@@ -77,6 +77,12 @@ jobs:
           docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable
           docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:production
 
+      - name: Wait for image sync
+        run: |
+          echo "Waiting 10 seconds for Docker Hub to sync with Google Cloud Mirror..."
+          sleep 10
+          echo "Image should now be available for Cloud Run deployment"
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:

@@ -1642,10 +1642,10 @@ If you need even more cost savings, consider these alternatives:
 
 - [x] Set up Google Cloud Project
 - [x] Configure Cloud Run services
-- [ ] Test staging deployment (`staging` tag)
-- [ ] Create first stable release (`v1.0.0`)
-- [ ] Deploy to production
-- [ ] Monitor and document deployment
+- [x] Test staging deployment (`staging` tag)
+- [x] Create first stable release (`v1.0.0`)
+- [x] Deploy to production
+- [x] Monitor and document deployment
 
 ### Phase 8: Documentation & Portfolio (Week 7)
 
