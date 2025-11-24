@@ -1,5 +1,7 @@
 # TechPioneers
 
+![Desktop Version Screenshot](./app_desktop_screenshot.png)
+
 ## 📖 About The Project
 
 **TechPioneers** is a portfolio project demonstrating modern frontend development skills, professional workflows, and best practices. The website features:
