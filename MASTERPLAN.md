@@ -1649,7 +1649,7 @@ If you need even more cost savings, consider these alternatives:
 
 ### Phase 8: Documentation & Portfolio (Week 7)
 
-- [x] Complete README with screenshots
+- [x] Complete README documentation
 - [x] Write technical blog post (optional)
 - [x] Create video walkthrough (optional)
 - [x] Update portfolio website
