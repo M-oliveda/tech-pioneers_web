@@ -1,6 +1,6 @@
 {
   "name": "techpioneers-web",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A portfolio project showcasing key figures in tech industry - built with vanilla JavaScript, HTML5, and CSS3",
   "type": "module",
   "scripts": {
