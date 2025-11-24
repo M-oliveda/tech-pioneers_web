@@ -1,6 +1,6 @@
 {
   "name": "techpioneers-web",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A portfolio project showcasing key figures in tech industry - built with vanilla JavaScript, HTML5, and CSS3",
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mauricio/techpioneers_web.git"
+    "url": "git+https://github.com/M-oliveda/tech-pioneers_web.git"
   },
   "keywords": [
     "portfolio",
@@ -31,9 +31,9 @@
   "author": "Mauricio Oliveda",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mauricio/techpioneers_web/issues"
+    "url": "https://github.com/M-oliveda/tech-pioneers_web/issues"
   },
-  "homepage": "https://github.com/mauricio/techpioneers_web#readme",
+  "homepage": "https://github.com/M-oliveda/tech-pioneers_web#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.0",
     "autoprefixer": "^10.4.22",
