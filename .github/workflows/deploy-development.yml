@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 15
     environment:
       name: development
-      url: https://${{ env.SERVICE_NAME }}-${{ secrets.GCP_PROJECT_ID }}.run.app
+      url: ${{ steps.service-url.outputs.url }}
 
     steps:
       - name: Checkout code
@@ -69,11 +69,21 @@ jobs:
             --set-env-vars="NODE_ENV=development"
 
       - name: Get Service URL
+        id: service-url
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
             --region=${{ env.REGION }} \
             --format='value(status.url)')
+          echo "url=${SERVICE_URL}" >> $GITHUB_OUTPUT
           echo "Development environment deployed to: $SERVICE_URL"
           echo "Purpose: Integrate features, run integration tests, catch issues early"
           echo "Data Type: Synthetic / Partial anonymized"
           echo "🔒 Remember to use have the username and password for authentication"
+      
+      - name: Update deployment status
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.service-url.outputs.url }}';
+            console.log(`Deployment URL: ${url}`);
