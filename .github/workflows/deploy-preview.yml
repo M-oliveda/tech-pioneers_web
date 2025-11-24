@@ -15,6 +15,9 @@ jobs:
   deploy-preview:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment:
+      name: preview-pr-${{ github.event.pull_request.number }}
+      url: ${{ steps.preview-url.outputs.url }}
     permissions:
       pull-requests: write
       contents: read

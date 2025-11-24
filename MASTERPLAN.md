@@ -1632,7 +1632,7 @@ If you need even more cost savings, consider these alternatives:
 ### Phase 6: Testing & Optimization (Week 6)
 
 - [x] Accessibility audit and fixes
-- [ ] Cross-browser testing
+- [x] Cross-browser testing
 - [x] Performance optimization
 - [x] Lighthouse audit (target 90+)
 - [x] Mobile/tablet/desktop testing
@@ -1642,18 +1642,18 @@ If you need even more cost savings, consider these alternatives:
 
 - [x] Set up Google Cloud Project
 - [x] Configure Cloud Run services
-- [ ] Test staging deployment (`staging` tag)
-- [ ] Create first stable release (`v1.0.0`)
-- [ ] Deploy to production
-- [ ] Monitor and document deployment
+- [x] Test staging deployment (`staging` tag)
+- [x] Create first stable release (`v1.0.0`)
+- [x] Deploy to production
+- [x] Monitor and document deployment
 
 ### Phase 8: Documentation & Portfolio (Week 7)
 
-- [ ] Complete README with screenshots
-- [ ] Write technical blog post (optional)
-- [ ] Create video walkthrough (optional)
-- [ ] Update portfolio website
-- [ ] Share project on GitHub
+- [x] Complete README with screenshots
+- [x] Write technical blog post (optional)
+- [x] Create video walkthrough (optional)
+- [x] Update portfolio website
+- [x] Share project on GitHub
 
 ## Success Criteria
 

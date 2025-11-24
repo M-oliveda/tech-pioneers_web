@@ -16,6 +16,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment:
+      name: staging
+      url: ${{ steps.service-url.outputs.url }}
 
     steps:
       - name: Checkout code

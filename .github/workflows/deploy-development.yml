@@ -15,6 +15,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment:
+      name: development
+      url: https://${{ env.SERVICE_NAME }}-${{ secrets.GCP_PROJECT_ID }}.run.app
 
     steps:
       - name: Checkout code
