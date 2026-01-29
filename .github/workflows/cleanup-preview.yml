@@ -5,17 +5,15 @@ on:
     types: [closed]
     branches: [develop, main]
 
-env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: ${{ secrets.GCP_REGION }}
-
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    environment: preview
     permissions:
       pull-requests: write
       contents: read
+      id-token: write
 
     steps:
       - name: Generate preview service name
@@ -28,7 +26,8 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -37,7 +36,8 @@ jobs:
         continue-on-error: true
         run: |
           gcloud run services delete ${{ steps.preview-name.outputs.service_name }} \
-            --region=${{ env.REGION }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
             --quiet || echo "Service not found or already deleted"
 
       - name: Comment PR with cleanup status
