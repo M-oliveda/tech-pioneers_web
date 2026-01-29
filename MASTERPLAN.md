@@ -578,7 +578,7 @@ docker-compose*.yml
 #### Docker Best Practices
 
 - **Use `docker-compose.yml`** for **local development only**. This file:
-  - Uses the `.env.local` file for environment variables
+  - Uses the `.env` file for environment variables
   - Includes **bind mounts** for hot-reloading
   - Exposes ports for easy access (5173)
   - Targets the `development` stage in the Dockerfile
@@ -600,7 +600,7 @@ services:
       target: development
     container_name: techpioneers_local_web
     env_file:
-      - .env.local
+      - .env
     ports:
       - "5173:5173"
     volumes:
@@ -1620,7 +1620,7 @@ If you need even more cost savings, consider these alternatives:
 - [x] Optimize and compress images
 - [x] Test all interactive elements
 - [x] Implement 5-environment deployment strategy
-- [x] Update docker-compose.yml to use .env.local
+- [x] Update docker-compose.yml to use .env
 - [x] Create GitHub workflow for Preview environment (PR deployments)
 - [x] Create GitHub workflow cleanup for Preview environments
 - [x] Rename and update Development environment workflow (develop branch)

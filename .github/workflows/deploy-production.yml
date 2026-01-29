@@ -13,10 +13,7 @@ on:
         type: string
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: ${{ secrets.GCP_REGION }}
   SERVICE_NAME: techpioneers-prod
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_NAME: techpioneers
 
 jobs:
@@ -33,9 +30,11 @@ jobs:
     needs: approval
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment: production
     permissions:
       contents: write
       packages: write
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -66,16 +65,16 @@ jobs:
       - name: Build Docker image
         run: |
           docker build --target production \
-            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
-            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable \
-            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:production \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:production \
             .
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:production
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:stable
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:production
 
       - name: Wait for image sync
         run: |
@@ -86,7 +85,8 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -94,9 +94,10 @@ jobs:
       - name: Deploy to Cloud Run (Production)
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image=docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
+            --image=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} \
             --platform=managed \
-            --region=${{ env.REGION }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
             --allow-unauthenticated \
             --memory=256Mi \
             --cpu=1 \
@@ -112,7 +113,8 @@ jobs:
         id: service-url
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
-            --region=${{ env.REGION }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
             --format='value(status.url)')
           echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
           echo "Production deployed to: $SERVICE_URL"
@@ -131,7 +133,7 @@ jobs:
 
             **Deployment Details:**
             - Service: ${{ env.SERVICE_NAME }}
-            - Region: ${{ env.REGION }}
+            - Region: ${{ secrets.GCP_REGION }}
             - URL: ${{ steps.service-url.outputs.url }}
             - Commit: ${{ github.sha }}
 

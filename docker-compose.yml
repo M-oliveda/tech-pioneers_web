@@ -8,7 +8,7 @@ services:
       target: development
     container_name: techpioneers_local_web
     env_file:
-      - .env.local
+      - .env
     ports:
       - "5173:5173"
     volumes:
