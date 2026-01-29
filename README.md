@@ -124,7 +124,7 @@ This project showcases expertise in vanilla JavaScript, responsive design, acces
 | `docker compose restart web` | Restart the web service                    |
 | `docker compose exec web sh` | Open shell inside container                |
 
-**Environment File:** Local development uses `.env.local` for environment variables
+**Environment File:** Local development uses `.env` for environment variables
 
 #### Building Production Image Locally (Testing Only)
 

@@ -6,10 +6,7 @@ on:
       - "release/**"
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: ${{ secrets.GCP_REGION }}
   SERVICE_NAME: techpioneers-staging
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   IMAGE_NAME: techpioneers
 
 jobs:
@@ -19,6 +16,9 @@ jobs:
     environment:
       name: staging
       url: ${{ steps.service-url.outputs.url }}
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -43,21 +43,22 @@ jobs:
           docker build --target protected \
             --build-arg AUTH_USERNAME=${{ secrets.STAGING_AUTH_USERNAME }} \
             --build-arg AUTH_PASSWORD=${{ secrets.STAGING_AUTH_PASSWORD }} \
-            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging \
-            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ steps.release-version.outputs.version }} \
-            -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ github.sha }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ steps.release-version.outputs.version }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ github.sha }} \
             .
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ steps.release-version.outputs.version }}
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ steps.release-version.outputs.version }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging-${{ github.sha }}
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -65,9 +66,10 @@ jobs:
       - name: Deploy to Cloud Run (Staging)
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image=docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging \
+            --image=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:staging \
             --platform=managed \
-            --region=${{ env.REGION }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
             --allow-unauthenticated \
             --memory=256Mi \
             --cpu=1 \
@@ -83,7 +85,8 @@ jobs:
         id: service-url
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
-            --region=${{ env.REGION }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
             --format='value(status.url)')
           echo "url=${SERVICE_URL}" >> $GITHUB_OUTPUT
           echo "Staging environment deployed to: ${SERVICE_URL}"
